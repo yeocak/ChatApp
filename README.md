@@ -4,4 +4,4 @@
 
 ![](https://raw.githubusercontent.com/yeocak/ChatApp/master/github_images/login.png)
 
-![](https://raw.githubusercontent.com/yeocak/ChatApp/master/github_images/login_laydown.png)
+![](https://raw.githubusercontent.com/yeocak/ChatApp/master/github_images/login_land.png)
