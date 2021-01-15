@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "111355188789",
+    "project_id": "chatapp-35faa",
+    "storage_bucket": "chatapp-35faa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:111355188789:android:3984f3dc8b36d59da8037c",
+        "android_client_info": {
+          "package_name": "com.yeocak.chatapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "111355188789-f4p0aij9t3nfhetbjcdcgjl3v01mu6hs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDRlbv9JD-WzkZ8gtlf_NSGiWoxQ-GMR0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "111355188789-f4p0aij9t3nfhetbjcdcgjl3v01mu6hs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
