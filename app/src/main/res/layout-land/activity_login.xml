@@ -106,6 +106,7 @@
         android:layout_marginBottom="10dp"
         android:background="#00FFFFFF"
         android:focusableInTouchMode="true"
+        android:onClick="goSignIn"
         android:scaleType="fitCenter"
         android:src="@drawable/skin_button"
         app:layout_constraintBottom_toTopOf="@+id/tvForgot"
@@ -183,4 +184,15 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.8" />
+
+    <ProgressBar
+        android:id="@+id/pbLogin"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
