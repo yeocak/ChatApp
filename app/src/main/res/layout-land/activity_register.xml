@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/backgroundland"
-    tools:context=".MainActivity">
+    tools:context=".activities.LoginActivity">
 
     <EditText
         android:id="@+id/etRegisterUsername"
@@ -16,7 +16,7 @@
         android:drawableStart="@drawable/ic_baseline_person_24"
         android:drawablePadding="6dp"
         android:ems="10"
-        android:hint="Enter username"
+        android:hint="Enter name"
         android:inputType="textEmailAddress"
         android:padding="10dp"
         app:layout_constraintBottom_toTopOf="@+id/etRegisterEmail"

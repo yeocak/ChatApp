@@ -8,6 +8,10 @@ android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
 
+    buildFeatures {
+        viewBinding true
+    }
+
     defaultConfig {
         applicationId "com.yeocak.chatapp"
         minSdkVersion 21
@@ -43,9 +47,11 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'com.google.firebase:firebase-auth-ktx'
     implementation 'com.google.firebase:firebase-analytics:18.0.1'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation 'com.facebook.android:facebook-android-sdk:5.15.3'
-    apply plugin: 'kotlin-android-extensions'
+    implementation 'com.google.android.gms:play-services-auth:19.0.0'
+    implementation 'com.google.android.material:material:1.2.1'
 }

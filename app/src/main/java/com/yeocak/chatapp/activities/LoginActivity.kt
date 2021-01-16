@@ -1,11 +1,7 @@
-package com.yeocak.chatapp
+package com.yeocak.chatapp.activities
 
-import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageInfo
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Base64
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -20,36 +16,32 @@ import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_main.view.*
-import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
-import java.util.*
+import com.yeocak.chatapp.databinding.ActivityLoginBinding
 
 
-class MainActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity() {
 
     lateinit var callbackManager: CallbackManager
     private lateinit var auth: FirebaseAuth
+    private lateinit var binding : ActivityLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         auth = Firebase.auth
 
         if(auth.currentUser != null){
-            Log.d("Facebook","Girildi")
-            Log.d("Facebook", auth.currentUser!!.displayName.toString())
+            Log.d("Facebook","Girilmiş")
+            val intent = Intent(this, MenuActivity::class.java)
+            startActivity(intent)
+            finish()
         }
-        else{
-            Log.d("Facebook","Girilmemiş")
-        }
-        Firebase.auth.signOut()
 
         callbackManager = CallbackManager.Factory.create()
 
-        btnFacebook.setOnClickListener{
+        binding.btnFacebook.setOnClickListener{
             LoginManager.getInstance().logInWithReadPermissions(this, listOf("public_profile", "email"))
         }
 
