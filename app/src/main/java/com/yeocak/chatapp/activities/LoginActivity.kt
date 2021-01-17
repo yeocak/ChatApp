@@ -68,6 +68,10 @@ class LoginActivity : AppCompatActivity() {
             signGoogle()
         }
 
+        binding.tvForgot.setOnClickListener {
+            startActivity(Intent(this, ForgotActivity::class.java))
+        }
+
     }
 
     private fun signGoogle(){
@@ -164,6 +168,5 @@ class LoginActivity : AppCompatActivity() {
         val intent = Intent(this, MenuActivity::class.java)
         startActivity(intent)
         binding.pbLogin.visibility = INVISIBLE
-        finish()
     }
 }
