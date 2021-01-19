@@ -4,9 +4,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
+import com.yeocak.chatapp.MyFirebaseMessagingService.Companion.token
 import com.yeocak.chatapp.R
 import com.yeocak.chatapp.databinding.ActivityMenuBinding
 import com.yeocak.chatapp.fragments.CommunityFragment
@@ -52,8 +55,6 @@ class MenuActivity : AppCompatActivity() {
                 else -> false
             }
         }
-
-        Toast.makeText(this,auth.currentUser?.displayName.toString(), Toast.LENGTH_SHORT).show()
 
     }
 
