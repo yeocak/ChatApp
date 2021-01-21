@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "111355188789-7csaog6ebebsjjpso0b5n04feihl87al.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yeocak.chatapp",
+            "certificate_hash": "e082e8f0be5dfdba5d30f5f33b81072f89d1f786"
+          }
+        },
+        {
           "client_id": "111355188789-f4p0aij9t3nfhetbjcdcgjl3v01mu6hs.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -27,7 +35,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "111355188789-f4p0aij9t3nfhetbjcdcgjl3v01mu6hs.apps.googleusercontent.com",
+              "client_id": "111355188789-emi4cega94dcjepb9nqaov5bo4s6o9qv.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

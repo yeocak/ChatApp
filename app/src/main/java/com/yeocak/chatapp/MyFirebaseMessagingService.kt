@@ -1,5 +1,6 @@
 package com.yeocak.chatapp
 
+import android.app.ActivityManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_HIGH
@@ -14,31 +15,16 @@ import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.yeocak.chatapp.activities.LoginActivity
+import com.yeocak.chatapp.activities.MessageActivity
 import kotlin.random.Random
 
 class MyFirebaseMessagingService: FirebaseMessagingService() {
 
     val channelId = "message_channel"
-
-    companion object {
-        var sharedPref: SharedPreferences? = null
-
-        var token: String?
-            get() {
-                return sharedPref?.getString("token", "")
-            }
-            set(value) {
-                sharedPref?.edit()?.putString("token", value)?.apply()
-            }
-    }
-
-    override fun onNewToken(newToken: String) {
-        super.onNewToken(newToken)
-        token = newToken
-    }
 
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
@@ -62,6 +48,12 @@ class MyFirebaseMessagingService: FirebaseMessagingService() {
             .build()
 
         notificationManager.notify(notificationID, notification)
+
+        // Taking the messages:
+
+        DatabaseFun.setup("from${message.data["fromUID"]}")
+        DatabaseFun.add("from${message.data["fromUID"]}", message.data["message"]!!,false)
+
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

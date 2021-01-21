@@ -43,5 +43,4 @@ class MessagingAdapter(
     override fun getItemCount(): Int {
         return messageList.size
     }
-
 }

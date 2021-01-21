@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.NoActionBar">
-        <activity android:name=".activities.MessageActivity"></activity>
+        <activity android:name=".activities.MessageActivity" />
         <activity android:name=".activities.TesterActivity" />
         <activity android:name=".activities.ForgotActivity" />
         <activity android:name=".activities.MenuActivity" />

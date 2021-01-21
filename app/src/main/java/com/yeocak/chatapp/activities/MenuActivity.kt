@@ -9,7 +9,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
-import com.yeocak.chatapp.MyFirebaseMessagingService.Companion.token
 import com.yeocak.chatapp.R
 import com.yeocak.chatapp.databinding.ActivityMenuBinding
 import com.yeocak.chatapp.fragments.CommunityFragment

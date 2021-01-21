@@ -1,13 +1,16 @@
 package com.yeocak.chatapp
 
+import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.yeocak.chatapp.activities.MessageActivity
 import com.yeocak.chatapp.databinding.SingleMessagesMenuBinding
 
 class MessagesAdapter(
-        private val messagesList: MutableList<SingleMessages>
+        private val messagesList: MutableList<SingleMessages>, private val context: Context
 ) : RecyclerView.Adapter<MessagesAdapter.MessagesViewHolder>() {
 
     class MessagesViewHolder(view: View) : RecyclerView.ViewHolder(view){
@@ -30,6 +33,12 @@ class MessagesAdapter(
         with(holder){
             binding.tvPersonName.text = current.name
             binding.tvPersonMessage.text = current.lastMessage
+
+            binding.layoutBlock.setOnClickListener {
+                val intent = Intent(context, MessageActivity::class.java)
+                intent.putExtra("uid",current.uid)
+                context.startActivity(intent)
+            }
         }
     }
 

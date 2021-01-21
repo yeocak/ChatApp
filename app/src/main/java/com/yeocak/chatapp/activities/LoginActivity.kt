@@ -5,8 +5,7 @@ import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.View.INVISIBLE
-import android.view.View.VISIBLE
+import android.view.View.*
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import bolts.Task
@@ -25,9 +24,16 @@ import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.iid.InstanceIdResult
 import com.google.firebase.ktx.Firebase
+import com.yeocak.chatapp.DatabaseFun
+import com.yeocak.chatapp.LoginData.phoneToken
+import com.yeocak.chatapp.LoginData.userUID
 import com.yeocak.chatapp.R
 import com.yeocak.chatapp.databinding.ActivityLoginBinding
+import java.lang.Exception
 
 class LoginActivity : AppCompatActivity() {
 
@@ -38,7 +44,8 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var googleClient: GoogleSignInClient
     private lateinit var googleOptions: GoogleSignInOptions
-    private var RC_SIGN_IN = 1
+    private val RC_SIGN_IN = 1
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +53,13 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         auth = Firebase.auth
+
+        DatabaseFun.creating(this,"Test")
+        FirebaseInstanceId.getInstance().token?.let {
+            phoneToken = it
+
+        }
+        // TODO("Bu ikisini düzelt, login öncesi yap")
 
         if(auth.currentUser != null){
             updateActivity()
@@ -58,11 +72,7 @@ class LoginActivity : AppCompatActivity() {
             signFacebook()
         }
 
-        googleOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build()
-        googleClient = GoogleSignIn.getClient(this,googleOptions)
+
         binding.btnGoogle.setOnClickListener {
             binding.pbLogin.visibility = VISIBLE
             signGoogle()
@@ -75,6 +85,12 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun signGoogle(){
+        googleOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build()
+        googleClient = GoogleSignIn.getClient(this,googleOptions)
+
         val signIntent = googleClient.signInIntent
         startActivityForResult(signIntent,RC_SIGN_IN)
     }
@@ -91,12 +107,12 @@ class LoginActivity : AppCompatActivity() {
 
             override fun onCancel() {
                 Log.d("Facebook", "facebook:onCancel")
-                binding.pbLogin.visibility = INVISIBLE
+                binding.pbLogin.visibility = GONE
             }
 
             override fun onError(error: FacebookException) {
                 Log.d("Facebook", "facebook:onError", error)
-                binding.pbLogin.visibility = INVISIBLE
+                binding.pbLogin.visibility = GONE
             }
 
         })
@@ -112,7 +128,7 @@ class LoginActivity : AppCompatActivity() {
                     updateActivity()
                 } else {
                     Toast.makeText(this,"Authentication failed!",Toast.LENGTH_SHORT).show()
-                    binding.pbLogin.visibility = INVISIBLE
+                    binding.pbLogin.visibility = GONE
                 }
             }
     }
@@ -120,6 +136,7 @@ class LoginActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
+        callbackManager.onActivityResult(requestCode, resultCode, data)
 
         if(requestCode == RC_SIGN_IN){
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
@@ -137,11 +154,10 @@ class LoginActivity : AppCompatActivity() {
                         }
             }catch(e: ApiException){
                 Toast.makeText(this,e.toString(), Toast.LENGTH_SHORT).show()
+                Log.d("GoogleError",e.toString())
             }
-            binding.pbLogin.visibility = INVISIBLE
+            binding.pbLogin.visibility = GONE
         }
-
-        callbackManager.onActivityResult(requestCode, resultCode, data)
     }
 
     fun goSignUp(view: View){
@@ -151,22 +167,43 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun goSignIn(view: View){
-        binding.pbLogin.visibility = VISIBLE
-        auth.signInWithEmailAndPassword(binding.etLoginEmail.text.toString(),binding.etLoginPassword.text.toString())
-            .addOnCompleteListener(this) {
-                if(it.isSuccessful){
-                    updateActivity()
-                }
-                else{
-                    Toast.makeText(this,"Authentication failed!",Toast.LENGTH_SHORT).show()
-                    binding.pbLogin.visibility = INVISIBLE
-                }
-            }
+
+        if(binding.etLoginEmail.text.isNotEmpty() && binding.etLoginPassword.text.isNotEmpty()){
+            binding.pbLogin.visibility = VISIBLE
+
+            auth.signInWithEmailAndPassword(binding.etLoginEmail.text.toString(),binding.etLoginPassword.text.toString())
+                    .addOnCompleteListener(this) {
+                        if(it.isSuccessful){
+                            updateActivity()
+                        }
+                        else{
+                            Toast.makeText(this,"Authentication failed!",Toast.LENGTH_SHORT).show()
+                            binding.pbLogin.visibility = GONE
+                        }
+                    }
+        }
+
     }
 
     private fun updateActivity(){
-        val intent = Intent(this, MenuActivity::class.java)
-        startActivity(intent)
-        binding.pbLogin.visibility = INVISIBLE
+        val userName = auth.currentUser?.displayName
+        userUID = auth.currentUser?.uid
+        val inserting = HashMap<String,String>()
+        inserting.put("currentPhone", phoneToken!!)
+        inserting.put("name", userName!!)
+
+        val db = FirebaseFirestore.getInstance()
+
+        db.collection("profile").document(userUID!!).set(
+                inserting
+        )
+                .addOnSuccessListener {
+                    val intent = Intent(this, MenuActivity::class.java)
+                    startActivity(intent)
+                    binding.pbLogin.visibility = GONE
+                }
+
+        Log.d("Senders","$userUID")
+
     }
 }
