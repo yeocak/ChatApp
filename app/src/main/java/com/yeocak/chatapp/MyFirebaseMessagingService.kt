@@ -1,25 +1,23 @@
 package com.yeocak.chatapp
 
-import android.app.ActivityManager
-import android.app.NotificationChannel
-import android.app.NotificationManager
+import android.app.*
 import android.app.NotificationManager.IMPORTANCE_HIGH
-import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_ONE_SHOT
 import android.content.Context
 import android.content.Intent
-import android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
-import android.content.SharedPreferences
 import android.os.Build
 import android.util.Log
-import android.widget.Toast
+import android.view.View.*
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import com.google.firebase.firestore.FirebaseFirestore
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.yeocak.chatapp.activities.LoginActivity
 import com.yeocak.chatapp.activities.MessageActivity
+import com.yeocak.chatapp.activities.MessageActivity.Companion.ctx
+import com.yeocak.chatapp.databinding.ActivityMessageBinding
 import kotlin.random.Random
 
 class MyFirebaseMessagingService: FirebaseMessagingService() {
@@ -27,6 +25,7 @@ class MyFirebaseMessagingService: FirebaseMessagingService() {
     val channelId = "message_channel"
 
     override fun onMessageReceived(message: RemoteMessage) {
+
         super.onMessageReceived(message)
 
         val intent = Intent(this, LoginActivity::class.java)
@@ -54,6 +53,13 @@ class MyFirebaseMessagingService: FirebaseMessagingService() {
         DatabaseFun.setup("from${message.data["fromUID"]}")
         DatabaseFun.add("from${message.data["fromUID"]}", message.data["message"]!!,false)
 
+        try{
+
+        }catch (e: Exception){
+            Log.d("Testing",e.toString())
+        }
+
+        Log.d("Testing","Worked?")
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

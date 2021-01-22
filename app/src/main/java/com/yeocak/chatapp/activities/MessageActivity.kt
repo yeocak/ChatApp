@@ -1,5 +1,6 @@
 package com.yeocak.chatapp.activities
 
+import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -31,14 +32,24 @@ class MessageActivity : AppCompatActivity() {
 
     private lateinit var uid: String
 
+    companion object {
+        lateinit var ctx : Context
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
+
         super.onCreate(savedInstanceState)
         binding = ActivityMessageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         auth = Firebase.auth.currentUser!!
 
+        ctx = this
+
         uid = intent.getStringExtra("uid")!!
+
+        Log.e("Sending","$uid ,")
 
         val db = FirebaseFirestore.getInstance().collection("profile").document(uid)
 
@@ -76,8 +87,8 @@ class MessageActivity : AppCompatActivity() {
             val response = RetrofitObject.api.postNotification(notification)
             if(response.isSuccessful) {
                 updateRV()
+                Log.e("Sending","Sended?")
             } else {
-
                 Log.e("Sending", "Error 1 : ${response.errorBody().toString()}")
 
             }
@@ -95,4 +106,5 @@ class MessageActivity : AppCompatActivity() {
         adapting.notifyDataSetChanged()
         binding.rvMessaging.scrollToPosition(messageList.size-1)
     }
+
 }

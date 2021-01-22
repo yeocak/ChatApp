@@ -2,6 +2,7 @@ package com.yeocak.chatapp
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
+import com.yeocak.chatapp.activities.MessageActivity
 
 object DatabaseFun {
 
