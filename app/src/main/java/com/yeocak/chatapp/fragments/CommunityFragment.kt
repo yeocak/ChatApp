@@ -2,6 +2,7 @@ package com.yeocak.chatapp.fragments
 
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.yeocak.chatapp.*
 import com.yeocak.chatapp.activities.MenuActivity
@@ -19,9 +21,23 @@ import com.yeocak.chatapp.databinding.FragmentCommunityBinding
 class CommunityFragment : Fragment() {
 
     private lateinit var binding: FragmentCommunityBinding
+    private lateinit var Fdb : FirebaseFirestore
+    private lateinit var communityList : MutableList<SingleCommunity>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Fdb = FirebaseFirestore.getInstance()
+
+        communityList = mutableListOf<SingleCommunity>()
+
+        Fdb.collection("profile").get().addOnSuccessListener {
+            for (document in it) {
+                val new = SingleCommunity(document.data["name"].toString(), document.id)
+                communityList.add(new)
+            }
+            createRecycler()
+        }
     }
 
     override fun onCreateView(
@@ -32,31 +48,20 @@ class CommunityFragment : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    private fun screenWidth(): Float{
+        val displayMetrics = DisplayMetrics()
+        (activity as MenuActivity).windowManager?.defaultDisplay!!.getRealMetrics(displayMetrics)
+        return displayMetrics.xdpi
+    }
 
-        val adapting = CommunityAdapter(mutableListOf<SingleCommunity>(
-                SingleCommunity("Emre"),
-                SingleCommunity("Ahmet"),
-                SingleCommunity("Mehmet"),
-                SingleCommunity("Emre2"),
-                SingleCommunity("Emre345"),
-                SingleCommunity("Emre546"),
-                SingleCommunity("Emr123e"),
-                SingleCommunity("Emre345"),
-                SingleCommunity("Emr567"),
-                SingleCommunity("Tester")
-        ))
+    private fun createRecycler(){
+        val adapting = CommunityAdapter(
+                communityList, (activity as MenuActivity)
+        )
 
         val row = (screenWidth() / 120).toInt()
 
         binding.rvCommunity.adapter = adapting
         binding.rvCommunity.layoutManager = GridLayoutManager((activity as MenuActivity),row)
-    }
-
-    private fun screenWidth(): Float{
-        val displayMetrics = DisplayMetrics()
-        (activity as MenuActivity).windowManager?.defaultDisplay!!.getRealMetrics(displayMetrics)
-        return displayMetrics.xdpi
     }
 }

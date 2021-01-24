@@ -15,8 +15,11 @@ class MessagingAdapter(
         val binding = SingleMessageBinding.bind(view)
     }
 
+    override fun getItemId(position: Int) = position.toLong()
+    override fun getItemViewType(position: Int) = position
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessagingViewHolder {
-        return MessagingAdapter.MessagingViewHolder(
+        return MessagingViewHolder(
             LayoutInflater.from(parent.context).inflate(
                 R.layout.single_message,
                 parent,

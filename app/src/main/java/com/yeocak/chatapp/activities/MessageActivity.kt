@@ -1,21 +1,23 @@
 package com.yeocak.chatapp.activities
 
-import android.content.Context
-import android.database.sqlite.SQLiteDatabase
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.WindowManager
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.*
+import com.google.firebase.database.ktx.database
+import com.google.firebase.database.ktx.getValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
-import com.google.gson.Gson
 import com.yeocak.chatapp.*
 import com.yeocak.chatapp.databinding.ActivityMessageBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
@@ -30,51 +32,76 @@ class MessageActivity : AppCompatActivity() {
     private lateinit var partnerName : String
     private lateinit var partnerPhone : String
 
-    private lateinit var uid: String
+    private lateinit var partnerUid: String
 
-    companion object {
-        lateinit var ctx : Context
-    }
+    private lateinit var realtime : DatabaseReference
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
-
+        
         super.onCreate(savedInstanceState)
         binding = ActivityMessageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        auth = Firebase.auth.currentUser!!
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
-        ctx = this
+        auth = Firebase.auth.currentUser!! // User auth
+        partnerUid = intent.getStringExtra("uid")!! // Partner's uid
 
-        uid = intent.getStringExtra("uid")!!
 
-        Log.e("Sending","$uid ,")
-
-        val db = FirebaseFirestore.getInstance().collection("profile").document(uid)
-
-        db.get()
+        val firestore = FirebaseFirestore.getInstance().collection("profile").document(partnerUid) // Getting profile databases
+        firestore.get()
                 .addOnSuccessListener {
                     partnerName = it["name"].toString()
                     partnerPhone = it["currentPhone"].toString()
                 }
 
-        DatabaseFun.setup("from$uid")
-        messageList = DatabaseFun.take("from$uid")
 
-        adapting = MessagingAdapter(messageList)
+        val realtimeKey = combineUID(auth.uid, partnerUid) // Getting real time databases and messages
+        realtime = Firebase.database("https://chatapp-35faa-default-rtdb.europe-west1.firebasedatabase.app/").getReference("$realtimeKey")
 
-        binding.rvMessaging.adapter = adapting
-        binding.rvMessaging.layoutManager = LinearLayoutManager(this)
-        binding.rvMessaging.scrollToPosition(messageList.size-1)
+        messageList = mutableListOf<SingleMessage>()
+        setRV()
+
+        realtime.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val value = dataSnapshot.getValue<List<HashMap<String,String>>>()
+                val newList = mutableListOf<SingleMessage>()
+                for(a in value!!){
+                    if(!a.isNullOrEmpty()){
+                        val msg = a["message"]
+                        var owning = false
+
+                        if(a["fromUID"] == auth.uid){
+                            owning = true
+                        }
+
+                        newList.add(SingleMessage(
+                                owning,msg!!
+                        ))
+                    }
+                }
+
+                updateRV(newList)
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(this@MessageActivity,"Failed to load messages!",Toast.LENGTH_SHORT).show()
+            }
+        })
 
         binding.btnSendMessage.setOnClickListener {
             if(binding.etNewMessage.text.isNotEmpty()){
                 val newMessage = binding.etNewMessage.text.toString()
 
+                sendMessage(NotificationData(
+                        auth.displayName!!,newMessage,auth.uid,partnerUid
+                ))
+
                 sendNotification(
                         PushNotification(
-                                NotificationData(auth.displayName!!, newMessage, auth.uid),
+                                NotificationData(auth.displayName!!, newMessage, auth.uid,partnerUid),
                                 partnerPhone
                         )
                 )
@@ -82,11 +109,18 @@ class MessageActivity : AppCompatActivity() {
         }
     }
 
+    private fun setRV(){
+        adapting = MessagingAdapter(messageList)
+
+        binding.rvMessaging.adapter = adapting
+        binding.rvMessaging.layoutManager = LinearLayoutManager(this)
+        binding.rvMessaging.scrollToPosition(messageList.size-1)
+    }
+
     private fun sendNotification(notification: PushNotification) = CoroutineScope(Dispatchers.IO).launch {
         try {
             val response = RetrofitObject.api.postNotification(notification)
             if(response.isSuccessful) {
-                updateRV()
                 Log.e("Sending","Sended?")
             } else {
                 Log.e("Sending", "Error 1 : ${response.errorBody().toString()}")
@@ -95,16 +129,31 @@ class MessageActivity : AppCompatActivity() {
         } catch(e: Exception) {
             Log.e("Sending", "Error 2 : $e")
         }
+
     }
 
-    fun updateRV(){
-        DatabaseFun.add("from$uid", binding.etNewMessage.text.toString(),true)
+    private fun sendMessage(datas: NotificationData){
+        realtime.child((messageList.size+1).toString()).setValue(datas)
+    }
 
+    private fun updateRV(list: MutableList<SingleMessage>){
         messageList.clear()
-        messageList.addAll(DatabaseFun.take("from$uid"))
+        messageList.addAll(list)
 
         adapting.notifyDataSetChanged()
         binding.rvMessaging.scrollToPosition(messageList.size-1)
     }
 
+    private fun combineUID(first: String, second: String): String?{
+
+        for(a in first.indices){
+            if(first[a].toInt() > second[a].toInt()){
+                return (first+second)
+            }
+            else if(first[a].toInt() < second[a].toInt()){
+                return (second+first)
+            }
+        }
+        return null
+    }
 }

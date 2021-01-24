@@ -16,7 +16,6 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.yeocak.chatapp.activities.LoginActivity
 import com.yeocak.chatapp.activities.MessageActivity
-import com.yeocak.chatapp.activities.MessageActivity.Companion.ctx
 import com.yeocak.chatapp.databinding.ActivityMessageBinding
 import kotlin.random.Random
 
@@ -47,19 +46,6 @@ class MyFirebaseMessagingService: FirebaseMessagingService() {
             .build()
 
         notificationManager.notify(notificationID, notification)
-
-        // Taking the messages:
-
-        DatabaseFun.setup("from${message.data["fromUID"]}")
-        DatabaseFun.add("from${message.data["fromUID"]}", message.data["message"]!!,false)
-
-        try{
-
-        }catch (e: Exception){
-            Log.d("Testing",e.toString())
-        }
-
-        Log.d("Testing","Worked?")
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
