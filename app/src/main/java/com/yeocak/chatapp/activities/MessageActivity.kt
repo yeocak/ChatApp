@@ -15,9 +15,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.yeocak.chatapp.*
 import com.yeocak.chatapp.databinding.ActivityMessageBinding
+import com.yeocak.chatapp.fragments.MessagingAdapter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
@@ -60,6 +60,10 @@ class MessageActivity : AppCompatActivity() {
         val realtimeKey = combineUID(auth.uid, partnerUid) // Getting real time databases and messages
         realtime = Firebase.database("https://chatapp-35faa-default-rtdb.europe-west1.firebasedatabase.app/").getReference("$realtimeKey")
 
+        realtime.child("0").setValue(RealtimeMessage(
+            "System","Connected",auth.uid
+        ))
+
         messageList = mutableListOf<SingleMessage>()
         setRV()
 
@@ -67,17 +71,17 @@ class MessageActivity : AppCompatActivity() {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val value = dataSnapshot.getValue<List<HashMap<String,String>>>()
                 val newList = mutableListOf<SingleMessage>()
-                for(a in value!!){
-                    if(!a.isNullOrEmpty()){
-                        val msg = a["message"]
+                for(a in value!!.indices){
+                    if(a != 0){
+                        val msg = value[a]["message"]
                         var owning = false
 
-                        if(a["fromUID"] == auth.uid){
+                        if(value[a]["fromUID"] == auth.uid){
                             owning = true
                         }
 
                         newList.add(SingleMessage(
-                                owning,msg!!
+                            owning,msg!!
                         ))
                     }
                 }
@@ -95,16 +99,17 @@ class MessageActivity : AppCompatActivity() {
             if(binding.etNewMessage.text.isNotEmpty()){
                 val newMessage = binding.etNewMessage.text.toString()
 
-                sendMessage(NotificationData(
-                        auth.displayName!!,newMessage,auth.uid,partnerUid
+                sendMessage(RealtimeMessage(
+                        auth.displayName!!,newMessage,auth.uid
                 ))
 
                 sendNotification(
                         PushNotification(
-                                NotificationData(auth.displayName!!, newMessage, auth.uid,partnerUid),
+                                NotificationData(auth.displayName!!, newMessage, auth.photoUrl.toString()),
                                 partnerPhone
                         )
                 )
+                Log.d("Tester2","Before : ${auth.photoUrl.toString()}")
             }
         }
     }
@@ -132,7 +137,7 @@ class MessageActivity : AppCompatActivity() {
 
     }
 
-    private fun sendMessage(datas: NotificationData){
+    private fun sendMessage(datas: RealtimeMessage){
         realtime.child((messageList.size+1).toString()).setValue(datas)
     }
 
@@ -154,6 +159,6 @@ class MessageActivity : AppCompatActivity() {
                 return (second+first)
             }
         }
-        return null
+        return first
     }
 }

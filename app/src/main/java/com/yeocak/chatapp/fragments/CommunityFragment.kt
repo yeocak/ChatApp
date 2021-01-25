@@ -1,5 +1,6 @@
 package com.yeocak.chatapp.fragments
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
@@ -7,16 +8,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
 import com.yeocak.chatapp.*
 import com.yeocak.chatapp.activities.MenuActivity
 import com.yeocak.chatapp.databinding.FragmentCommunityBinding
+import kotlinx.coroutines.currentCoroutineContext
 
 class CommunityFragment : Fragment() {
 
@@ -33,10 +30,11 @@ class CommunityFragment : Fragment() {
 
         Fdb.collection("profile").get().addOnSuccessListener {
             for (document in it) {
-                val new = SingleCommunity(document.data["name"].toString(), document.id)
+                val new = SingleCommunity(document.data["name"].toString(), document.id,document.data["photo"].toString())
                 communityList.add(new)
             }
             createRecycler()
+
         }
     }
 
@@ -51,6 +49,7 @@ class CommunityFragment : Fragment() {
     private fun screenWidth(): Float{
         val displayMetrics = DisplayMetrics()
         (activity as MenuActivity).windowManager?.defaultDisplay!!.getRealMetrics(displayMetrics)
+
         return displayMetrics.xdpi
     }
 

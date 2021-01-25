@@ -54,7 +54,6 @@ class LoginActivity : AppCompatActivity() {
 
         auth = Firebase.auth
 
-        DatabaseFun.creating(this,"Test")
         FirebaseInstanceId.getInstance().token?.let {
             phoneToken = it
 
@@ -81,7 +80,6 @@ class LoginActivity : AppCompatActivity() {
         binding.tvForgot.setOnClickListener {
             startActivity(Intent(this, ForgotActivity::class.java))
         }
-
     }
 
     private fun signGoogle(){
@@ -189,8 +187,11 @@ class LoginActivity : AppCompatActivity() {
         val userName = auth.currentUser?.displayName
         userUID = auth.currentUser?.uid
         val inserting = HashMap<String,String>()
-        inserting.put("currentPhone", phoneToken!!)
-        inserting.put("name", userName!!)
+        inserting["currentPhone"] = phoneToken!!
+        inserting["name"] = userName!!
+        if(auth.currentUser?.photoUrl != null){
+            inserting["photo"] = auth.currentUser?.photoUrl.toString()
+        }
 
         val db = FirebaseFirestore.getInstance()
 

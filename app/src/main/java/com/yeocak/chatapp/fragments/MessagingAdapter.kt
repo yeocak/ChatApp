@@ -1,10 +1,12 @@
-package com.yeocak.chatapp
+package com.yeocak.chatapp.fragments
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.yeocak.chatapp.R
+import com.yeocak.chatapp.SingleMessage
 import com.yeocak.chatapp.databinding.SingleMessageBinding
 
 class MessagingAdapter(
