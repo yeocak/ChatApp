@@ -41,9 +41,11 @@ class MessagesAdapter(
             db.collection("profile").document(current.uid).get().addOnSuccessListener {
 
                 binding.tvPersonName.text = it.data?.get("name").toString()
-                binding.ivPersonPhoto.load(
-                        it.data?.get("photo").toString()
-                )
+                if( it.data?.get("photo").toString() != "null"){
+                    binding.ivPersonPhoto.load(
+                            it.data?.get("photo").toString()
+                    )
+                }
                 binding.tvPersonMessage.text = current.lastMessage
 
             }

@@ -16,8 +16,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.yeocak.chatapp.*
 import com.yeocak.chatapp.databinding.ActivityMessageBinding
-import com.yeocak.chatapp.fragments.CommunityAdapter
-import com.yeocak.chatapp.fragments.MessagingAdapter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

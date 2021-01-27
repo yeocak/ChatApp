@@ -1,21 +1,14 @@
 package com.yeocak.chatapp.fragments
 
-import android.app.Activity
-import android.content.Context
-import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
 import com.yeocak.chatapp.R
 import com.yeocak.chatapp.SingleCommunity
-import com.yeocak.chatapp.activities.MenuActivity
 import com.yeocak.chatapp.databinding.SingleCommunityBlockBinding
 
 class CommunityAdapter(

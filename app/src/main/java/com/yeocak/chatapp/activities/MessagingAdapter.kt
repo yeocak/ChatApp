@@ -1,4 +1,4 @@
-package com.yeocak.chatapp.fragments
+package com.yeocak.chatapp.activities
 
 import android.view.LayoutInflater
 import android.view.View

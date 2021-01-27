@@ -188,9 +188,12 @@ class LoginActivity : AppCompatActivity() {
 
         val db = FirebaseFirestore.getInstance()
 
+        db.collection("detailedprofile").document(auth.currentUser!!.uid).get().addOnSuccessListener {
+
+            if(it["name"].toString() == "null"){
                 val userName = auth.currentUser?.displayName
                 userUID = auth.currentUser?.uid
-                var inserting = HashMap<String,String>()
+                val inserting = HashMap<String,String>()
                 inserting["currentPhone"] = phoneToken!!
                 inserting["name"] = userName!!
                 if(auth.currentUser?.photoUrl != null){
@@ -207,13 +210,26 @@ class LoginActivity : AppCompatActivity() {
 
                     db.collection("detailedprofile").document(userUID!!).set(inserting).addOnSuccessListener {
 
-                            val intent = Intent(this, MenuActivity::class.java)
-                            startActivity(intent)
-                            binding.pbLogin.visibility = GONE
+                        val intent = Intent(this, MenuActivity::class.java)
+                        startActivity(intent)
+                        binding.pbLogin.visibility = GONE
 
                     }
 
                 }
+            }
+            else{
+                val intent = Intent(this, MenuActivity::class.java)
+                startActivity(intent)
+                binding.pbLogin.visibility = GONE
+            }
 
+        }.addOnFailureListener {
+            if(auth.currentUser!=null){
+                val intent = Intent(this, MenuActivity::class.java)
+                startActivity(intent)
+                binding.pbLogin.visibility = GONE
+            }
+        }
     }
 }

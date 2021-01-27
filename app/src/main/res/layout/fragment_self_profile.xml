@@ -33,29 +33,34 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <ImageView
-                    android:id="@+id/ivProfileAvatar"
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/ibSelfProfileAvatar"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_margin="5dp"
+                    android:background="#00FFFFFF"
+                    android:scaleType="fitXY"
                     android:src="@drawable/ic_baseline_person_24"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/guideline14"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/tvProfileName"
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/etSelfProfileName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="30dp"
+                    android:drawableStart="@drawable/ic_baseline_edit_24"
+                    android:drawablePadding="10dp"
+                    android:padding="10dp"
                     android:text="ERROR!"
                     android:textAllCaps="false"
                     android:textColor="@color/customWhite"
                     android:textSize="25sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/ivProfileAvatar"
-                    app:layout_constraintStart_toEndOf="@+id/ivProfileAvatar"
-                    app:layout_constraintTop_toTopOf="@+id/ivProfileAvatar" />
+                    app:layout_constraintBottom_toBottomOf="@+id/ibSelfProfileAvatar"
+                    app:layout_constraintStart_toEndOf="@+id/ibSelfProfileAvatar"
+                    app:layout_constraintTop_toTopOf="@+id/ibSelfProfileAvatar" />
 
                 <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/guideline14"
@@ -77,151 +82,219 @@
                 app:layout_constraintStart_toStartOf="parent">
 
                 <LinearLayout
-                    android:id="@+id/layoutProfileYoutube"
+                    android:id="@+id/layoutSelfProfileYoutube"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:orientation="horizontal"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toTopOf="@+id/layoutProfileInstagram"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toTopOf="@+id/layoutSelfProfileInstagram"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
+                    <CheckBox
+                        android:id="@+id/cbSelfProfileYoutube"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center" />
+
                     <ImageView
                         android:id="@+id/imageView6"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:layout_margin="5dp"
+                        android:layout_gravity="center_vertical"
                         android:layout_weight="1"
                         android:src="@drawable/icon_youtube_colored" />
 
                     <TextView
-                        android:id="@+id/tvProfileYoutube"
+                        android:id="@+id/tvSlash1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="left|center_vertical"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="3dp"
                         android:layout_weight="1"
-                        android:text="/idhere"
+                        android:hint="/"
+                        android:textSize="25sp"
+                        android:textStyle="bold" />
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/etSelfProfileYoutube"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:hint="idhere"
                         android:textSize="17sp" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/layoutProfileFacebook"
+                    android:id="@+id/layoutSelfProfileFacebook"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:orientation="horizontal"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toTopOf="@+id/layoutProfileTwitter"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toTopOf="@+id/layoutSelfProfileTwitter"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/layoutProfileInstagram">
+                    app:layout_constraintTop_toBottomOf="@+id/layoutSelfProfileInstagram">
+
+                    <CheckBox
+                        android:id="@+id/cbSelfProfileFacebook"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center" />
 
                     <ImageView
                         android:id="@+id/imageView7"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:layout_margin="5dp"
+                        android:layout_gravity="center_vertical"
                         android:layout_weight="1"
                         android:src="@drawable/icon_facebook_colored" />
 
                     <TextView
-                        android:id="@+id/tvProfileFacebook"
+                        android:id="@+id/tvSlash3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="left|center_vertical"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="3dp"
                         android:layout_weight="1"
-                        android:text="/idhere"
+                        android:hint="/"
+                        android:textSize="25sp"
+                        android:textStyle="bold" />
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/etSelfProfileFacebook"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:hint="idhere"
                         android:textSize="17sp" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/layoutProfileInstagram"
+                    android:id="@+id/layoutSelfProfileInstagram"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:orientation="horizontal"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toTopOf="@+id/layoutProfileFacebook"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toTopOf="@+id/layoutSelfProfileFacebook"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/layoutProfileYoutube">
+                    app:layout_constraintTop_toBottomOf="@+id/layoutSelfProfileYoutube">
+
+                    <CheckBox
+                        android:id="@+id/cbSelfProfileInstagram"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center" />
 
                     <ImageView
                         android:id="@+id/imageView8"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:layout_margin="5dp"
+                        android:layout_gravity="center_vertical"
                         android:layout_weight="1"
                         android:src="@drawable/icon_instagram_colored" />
 
                     <TextView
-                        android:id="@+id/tvProfileInstagram"
+                        android:id="@+id/tvSlash2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="left|center_vertical"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="3dp"
                         android:layout_weight="1"
-                        android:text="/idhere"
+                        android:hint="/"
+                        android:textSize="25sp"
+                        android:textStyle="bold" />
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/etSelfProfileInstagram"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:hint="idhere"
                         android:textSize="17sp" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/layoutProfileTwitter"
+                    android:id="@+id/layoutSelfProfileTwitter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:orientation="horizontal"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/layoutProfileFacebook">
+                    app:layout_constraintTop_toBottomOf="@+id/layoutSelfProfileFacebook">
+
+                    <CheckBox
+                        android:id="@+id/cbSelfProfileTwitter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center" />
 
                     <ImageView
                         android:id="@+id/imageView9"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:layout_margin="5dp"
+                        android:layout_gravity="center_vertical"
                         android:layout_weight="1"
                         android:src="@drawable/icon_twitter_colored" />
 
                     <TextView
-                        android:id="@+id/tvProfileTwitter"
+                        android:id="@+id/tvSlash4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="left|center_vertical"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="3dp"
                         android:layout_weight="1"
-                        android:text="/idhere"
+                        android:hint="/"
+                        android:textSize="25sp"
+                        android:textStyle="bold" />
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/etSelfProfileTwitter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:hint="idhere"
                         android:textSize="17sp" />
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <TextView
-                android:id="@+id/tvProfileExp"
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/etSelfProfileExp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="15dp"
                 android:text="No self introduction :("
                 android:textColor="@color/customWhite"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/btnProfileSendMessage" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnProfileSendMessage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#6E505C"
-                android:text="SEND MESSAGE"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/guideline13" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
