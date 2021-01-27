@@ -1,5 +1,6 @@
 package com.yeocak.chatapp.activities
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -15,6 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.yeocak.chatapp.*
 import com.yeocak.chatapp.databinding.ActivityMessageBinding
+import com.yeocak.chatapp.fragments.CommunityAdapter
 import com.yeocak.chatapp.fragments.MessagingAdapter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -54,8 +56,8 @@ class MessageActivity : AppCompatActivity() {
                 .addOnSuccessListener {
                     partnerName = it["name"].toString()
                     partnerPhone = it["currentPhone"].toString()
+                    binding.tvPartnerName.text = partnerName
                 }
-
 
         val realtimeKey = combineUID(auth.uid, partnerUid) // Getting real time databases and messages
         realtime = Firebase.database("https://chatapp-35faa-default-rtdb.europe-west1.firebasedatabase.app/").getReference("$realtimeKey")
@@ -64,7 +66,7 @@ class MessageActivity : AppCompatActivity() {
             "System","Connected",auth.uid
         ))
 
-        messageList = mutableListOf<SingleMessage>()
+        messageList = mutableListOf()
         setRV()
 
         realtime.addValueEventListener(object : ValueEventListener {
@@ -105,12 +107,17 @@ class MessageActivity : AppCompatActivity() {
 
                 sendNotification(
                         PushNotification(
-                                NotificationData(auth.displayName!!, newMessage, auth.photoUrl.toString()),
+                                NotificationData(auth.displayName!!, newMessage, auth.photoUrl.toString(), auth.uid),
                                 partnerPhone
                         )
                 )
                 Log.d("Tester2","Before : ${auth.photoUrl.toString()}")
             }
+        }
+
+        binding.btnGoBackToMessages.setOnClickListener {
+            val intent = Intent(this, MenuActivity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -147,6 +154,13 @@ class MessageActivity : AppCompatActivity() {
 
         adapting.notifyDataSetChanged()
         binding.rvMessaging.scrollToPosition(messageList.size-1)
+
+        if(messageList.isNotEmpty()){
+            DatabaseFun.setup("last_messages")
+            DatabaseFun.add("last_messages", partnerUid, messageList[messageList.size-1].message, messageList[messageList.size-1].isOwner)
+        }
+
+
     }
 
     private fun combineUID(first: String, second: String): String?{

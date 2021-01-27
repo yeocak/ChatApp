@@ -1,20 +1,25 @@
 package com.yeocak.chatapp.fragments
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
 import com.yeocak.chatapp.R
 import com.yeocak.chatapp.SingleCommunity
-import com.yeocak.chatapp.activities.MessageActivity
+import com.yeocak.chatapp.activities.MenuActivity
 import com.yeocak.chatapp.databinding.SingleCommunityBlockBinding
 
 class CommunityAdapter(
-        private val communityList: MutableList<SingleCommunity>, private val context: Context
+        private val communityList: MutableList<SingleCommunity>, private val fm : FragmentManager
 ) : RecyclerView.Adapter<CommunityAdapter.CommunityViewHolder>() {
 
     class CommunityViewHolder(view: View) : RecyclerView.ViewHolder(view){
@@ -39,16 +44,38 @@ class CommunityAdapter(
 
             if(current.photo != "null"){
                 binding.ivCommunityImage.load(current.photo)
-                Log.d("Tester1","Hey : ${current.photo}")
             }
 
 
             binding.layoutCommunity.setOnClickListener {
-                val intent = Intent(context, MessageActivity::class.java)
-                intent.putExtra("uid",current.uid)
-                context.startActivity(intent)
+                FirebaseFirestore.getInstance().collection("detailedprofile").document(current.uid).get().addOnSuccessListener {
+
+                    transferprofileName = it.data?.get("name").toString()
+                    transferprofileDesc= it.data?.get("desc").toString()
+                    transferprofileAvatar= it.data?.get("photo").toString()
+                    transferprofileFacebook= it.data?.get("facebook").toString()
+                    transferprofileTwitter= it.data?.get("twitter").toString()
+                    transferprofileInstagram= it.data?.get("instagram").toString()
+                    transferprofileYoutube= it.data?.get("youtube").toString()
+                    transferprofileUid= current.uid
+
+                    fm.beginTransaction().replace(R.id.frMain, ProfilesFragment()).commit()
+                }
             }
         }
+    }
+
+    companion object{
+        // Transfer data between fragments
+
+        var transferprofileName: String? = null
+        var transferprofileDesc: String? = null
+        var transferprofileAvatar: String? = null
+        var transferprofileFacebook: String? = null
+        var transferprofileTwitter: String? = null
+        var transferprofileInstagram: String? = null
+        var transferprofileYoutube: String? = null
+        var transferprofileUid: String? = null
     }
 
     override fun getItemCount(): Int {

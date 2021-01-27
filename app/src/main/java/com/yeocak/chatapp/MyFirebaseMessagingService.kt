@@ -69,6 +69,7 @@ class MyFirebaseMessagingService: FirebaseMessagingService() {
                         .build()
 
                     notificationManager.notify(notificationID, notification)
+
                 }
             }
     }

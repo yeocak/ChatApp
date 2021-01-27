@@ -14,10 +14,6 @@ class MessagesFragment : Fragment() {
 
     private lateinit var binding: FragmentMessagesBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         binding = FragmentMessagesBinding.inflate(layoutInflater)
@@ -27,8 +23,9 @@ class MessagesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapting = MessagesAdapter(mutableListOf<SingleMessages>(SingleMessages("Test1","Test2","jHKf9bJyZ1YpxJjAIhNEe6DvpSo1")
-        ), (activity as MenuActivity))
+        val messages = DatabaseFun.take("last_messages")
+
+        val adapting = MessagesAdapter(messages, (activity as MenuActivity))
 
         binding.rvMessages.adapter = adapting
         binding.rvMessages.layoutManager = LinearLayoutManager((activity as MenuActivity))

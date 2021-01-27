@@ -4,13 +4,17 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
+import com.yeocak.chatapp.DatabaseFun
+import com.yeocak.chatapp.LoginData
 import com.yeocak.chatapp.R
 import com.yeocak.chatapp.databinding.ActivityRegisterBinding
 
@@ -105,9 +109,9 @@ class RegisterActivity : AppCompatActivity() {
                     user!!.updateProfile(profileUpdates)
                         .addOnCompleteListener { task ->
                             if (task.isSuccessful) {
-                                val intent = Intent(this, MenuActivity::class.java)
+                                auth.signOut()
+                                val intent = Intent(this, LoginActivity::class.java)
                                 startActivity(intent)
-                                finish()
                             }
                             else{
                                 Toast.makeText(this,it.exception.toString(),Toast.LENGTH_SHORT).show()
@@ -120,4 +124,5 @@ class RegisterActivity : AppCompatActivity() {
                 binding.pbRegister.visibility = INVISIBLE
             }
     }
+
 }

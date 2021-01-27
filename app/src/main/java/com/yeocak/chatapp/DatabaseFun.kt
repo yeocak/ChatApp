@@ -2,6 +2,7 @@ package com.yeocak.chatapp
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
+import android.util.Log
 import com.yeocak.chatapp.activities.MessageActivity
 
 object DatabaseFun {
@@ -12,24 +13,27 @@ object DatabaseFun {
             databasing = context.openOrCreateDatabase(userID, Context.MODE_PRIVATE,null)
         }
 
-        fun setup(fromID: String){
-            databasing.execSQL("CREATE TABLE IF NOT EXISTS $fromID (id INTEGER PRIMARY KEY AUTOINCREMENT, message TEXT, isown TEXT)")
+        fun setup(tableName : String){
+            databasing.execSQL("CREATE TABLE IF NOT EXISTS $tableName (fromid TEXT PRIMARY KEY, message TEXT, isown TEXT)")
         }
 
-        fun add(fromID: String, message: String, isOwn : Boolean){
-            databasing.execSQL("INSERT INTO $fromID (message, isown) VALUES ('$message' , '$isOwn')")
+        fun add(tableName: String, fromID: String, message: String, isOwn : Boolean){
+            databasing.execSQL("INSERT OR REPLACE INTO $tableName (fromid ,message, isown) VALUES ('$fromID' , '$message' , '$isOwn')")
         }
 
-        fun take(fromID: String, startPoint: Int = 0): MutableList<SingleMessage>{
-            val cursor = databasing.rawQuery("SELECT * FROM $fromID WHERE (id >= $startPoint AND id <= ${startPoint+40})", null)
+        fun take(tableName: String): MutableList<SingleMessages>{
+            val cursor = databasing.rawQuery("SELECT * FROM $tableName", null)
 
-            val returnList = mutableListOf<SingleMessage>()
+            val returnList = mutableListOf<SingleMessages>()
 
             while(cursor.moveToNext()){
-                returnList.add(SingleMessage(
-                        cursor.getString(2).toBoolean() , cursor.getString(1)
+                returnList.add(SingleMessages(
+                        cursor.getString(1),
+                        cursor.getString(2).toBoolean(),
+                        cursor.getString(0)
                 ))
             }
+
             cursor.close()
 
             return returnList

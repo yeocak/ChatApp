@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.firebase.firestore.FirebaseFirestore
 import com.yeocak.chatapp.*
@@ -55,7 +56,7 @@ class CommunityFragment : Fragment() {
 
     private fun createRecycler(){
         val adapting = CommunityAdapter(
-                communityList, (activity as MenuActivity)
+                communityList, this.fragmentManager!!
         )
 
         val row = (screenWidth() / 120).toInt()

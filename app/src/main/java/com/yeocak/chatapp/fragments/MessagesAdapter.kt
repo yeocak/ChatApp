@@ -6,6 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
 import com.yeocak.chatapp.R
 import com.yeocak.chatapp.SingleMessages
 import com.yeocak.chatapp.activities.MessageActivity
@@ -33,8 +36,17 @@ class MessagesAdapter(
         val current = messagesList[position]
 
         with(holder){
-            binding.tvPersonName.text = current.name
-            binding.tvPersonMessage.text = current.lastMessage
+            val db = FirebaseFirestore.getInstance()
+
+            db.collection("profile").document(current.uid).get().addOnSuccessListener {
+
+                binding.tvPersonName.text = it.data?.get("name").toString()
+                binding.ivPersonPhoto.load(
+                        it.data?.get("photo").toString()
+                )
+                binding.tvPersonMessage.text = current.lastMessage
+
+            }
 
             binding.layoutBlock.setOnClickListener {
                 val intent = Intent(context, MessageActivity::class.java)

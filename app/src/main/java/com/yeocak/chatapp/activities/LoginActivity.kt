@@ -56,7 +56,6 @@ class LoginActivity : AppCompatActivity() {
 
         FirebaseInstanceId.getInstance().token?.let {
             phoneToken = it
-
         }
         // TODO("Bu ikisini düzelt, login öncesi yap")
 
@@ -184,27 +183,37 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun updateActivity(){
-        val userName = auth.currentUser?.displayName
-        userUID = auth.currentUser?.uid
-        val inserting = HashMap<String,String>()
-        inserting["currentPhone"] = phoneToken!!
-        inserting["name"] = userName!!
-        if(auth.currentUser?.photoUrl != null){
-            inserting["photo"] = auth.currentUser?.photoUrl.toString()
-        }
+        DatabaseFun.creating(this,auth.currentUser!!.uid)
+        DatabaseFun.setup("last_messages")
 
         val db = FirebaseFirestore.getInstance()
 
-        db.collection("profile").document(userUID!!).set(
-                inserting
-        )
-                .addOnSuccessListener {
-                    val intent = Intent(this, MenuActivity::class.java)
-                    startActivity(intent)
-                    binding.pbLogin.visibility = GONE
+                val userName = auth.currentUser?.displayName
+                userUID = auth.currentUser?.uid
+                var inserting = HashMap<String,String>()
+                inserting["currentPhone"] = phoneToken!!
+                inserting["name"] = userName!!
+                if(auth.currentUser?.photoUrl != null){
+                    inserting["photo"] = auth.currentUser?.photoUrl.toString()
                 }
 
-        Log.d("Senders","$userUID")
+                db.collection("profile").document(userUID!!).set(inserting).addOnSuccessListener {
+
+                    inserting.clear()
+                    inserting["name"] = auth.currentUser?.displayName.toString()
+                    if(auth.currentUser?.photoUrl != null){
+                        inserting["photo"] = auth.currentUser?.photoUrl.toString()
+                    }
+
+                    db.collection("detailedprofile").document(userUID!!).set(inserting).addOnSuccessListener {
+
+                            val intent = Intent(this, MenuActivity::class.java)
+                            startActivity(intent)
+                            binding.pbLogin.visibility = GONE
+
+                    }
+
+                }
 
     }
 }
