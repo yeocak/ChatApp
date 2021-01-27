@@ -18,9 +18,11 @@ TODO List:
   - ~~Messaging system~~
     - ~~Realtime message system~~
     - ~~Notification system~~ (Debug in-app notification)
-  - Messages screen
+  - ~~Messages screen~~
   - Community screen
+    - ~~Show all users~~
+    - User search bar
   - Profile screen
     - Self profile screen
-    - Others profile screen
+    - ~~Others profile screen~~
   - Settings screen
