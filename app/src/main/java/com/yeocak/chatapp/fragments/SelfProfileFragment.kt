@@ -1,6 +1,10 @@
 package com.yeocak.chatapp.fragments
 
+import android.app.Activity.RESULT_OK
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -15,15 +19,19 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import com.yeocak.chatapp.LoginData.userUID
 import com.yeocak.chatapp.R
 import com.yeocak.chatapp.databinding.FragmentSelfProfileBinding
+import java.io.File
 
 class SelfProfileFragment : Fragment() {
 
     private lateinit var binding : FragmentSelfProfileBinding
     private lateinit var db : FirebaseFirestore
     private lateinit var auth : FirebaseUser
+
+    private var imageUri : Uri? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +52,8 @@ class SelfProfileFragment : Fragment() {
 
         db = FirebaseFirestore.getInstance()
         auth = Firebase.auth.currentUser!!
+
+        Log.d("Heyy",auth.photoUrl.toString())
 
         db.collection("detailedprofile").document(auth.uid).get().addOnSuccessListener {
             binding.etSelfProfileName.setText(auth.displayName)
@@ -76,26 +86,37 @@ class SelfProfileFragment : Fragment() {
                 binding.cbSelfProfileInstagram.isChecked = true
             }
         }
+
+        binding.ibSelfProfileAvatar.setOnClickListener{
+            val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+            startActivityForResult(gallery, 100)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(resultCode == RESULT_OK && requestCode == 100){
+            imageUri = data?.data
+            binding.ibSelfProfileAvatar.load(imageUri)
+        }
     }
 
     override fun onStop() {
         super.onStop()
 
-        val addingMap = hashMapOf<String, String>()
-        val easyMap = hashMapOf<String,String>()
+        val addingMap = hashMapOf<String, Any>()
+        val easyMap = hashMapOf<String,Any>()
 
         addingMap["desc"] = binding.etSelfProfileExp.text.toString()
 
         if(!binding.etSelfProfileName.text.isNullOrEmpty()){
-            val updating = userProfileChangeRequest {
+            userProfileChangeRequest {
                 displayName = binding.etSelfProfileName.text.toString()
             }
 
-            auth.updateProfile(updating).addOnSuccessListener {
                 addingMap["name"] = binding.etSelfProfileName.text.toString()
                 easyMap["name"] = binding.etSelfProfileName.text.toString()
 
-            }
         }
 
         if(!binding.etSelfProfileInstagram.text.isNullOrEmpty() && binding.cbSelfProfileInstagram.isChecked){
@@ -111,7 +132,33 @@ class SelfProfileFragment : Fragment() {
             addingMap["youtube"] = binding.etSelfProfileYoutube.text.toString()
         }
 
-        db.collection("detailedprofile").document(auth.uid).set(addingMap)
-        db.collection("profile").document(auth.uid).set(easyMap)
+        db.collection("detailedprofile").document(auth.uid).update(addingMap)
+        db.collection("profile").document(auth.uid).update(easyMap)
+
+        if(imageUri.toString() != "null"){
+            val ref = Firebase.storage.reference.child("photos/${userUID}.jpg")
+
+            ref.putFile(imageUri!!).addOnSuccessListener {
+                ref.downloadUrl.addOnSuccessListener {Uring ->
+
+                    val changing = userProfileChangeRequest {
+                        photoUri = Uring
+                    }
+
+                    auth.updateProfile(changing)
+                            .addOnSuccessListener {
+                                easyMap.clear()
+                                addingMap.clear()
+
+                                easyMap["photo"] = Uring.toString()
+                                addingMap["photo"] = Uring.toString()
+
+                                db.collection("detailedprofile").document(auth.uid).update(addingMap)
+                                db.collection("profile").document(auth.uid).update(easyMap)
+                            }
+
+                }
+            }
+        }
     }
 }
