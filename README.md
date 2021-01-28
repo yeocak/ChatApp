@@ -26,3 +26,4 @@ TODO List:
     - ~~Self profile screen~~
     - ~~Others profile screen~~
   - Settings screen
+  - Block user system
