@@ -109,7 +109,8 @@ class MessageActivity : AppCompatActivity() {
                                 partnerPhone
                         )
                 )
-                Log.d("Tester2","Before : ${auth.photoUrl.toString()}")
+
+                binding.etNewMessage.setText("")
             }
         }
 
@@ -117,6 +118,7 @@ class MessageActivity : AppCompatActivity() {
             val intent = Intent(this, MenuActivity::class.java)
             startActivity(intent)
         }
+
     }
 
     private fun setRV(){

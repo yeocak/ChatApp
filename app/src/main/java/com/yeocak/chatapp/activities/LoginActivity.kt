@@ -212,6 +212,7 @@ class LoginActivity : AppCompatActivity() {
 
                         val intent = Intent(this, MenuActivity::class.java)
                         startActivity(intent)
+                        finishAffinity()
                         binding.pbLogin.visibility = GONE
 
                     }
@@ -221,6 +222,7 @@ class LoginActivity : AppCompatActivity() {
             else{
                 val intent = Intent(this, MenuActivity::class.java)
                 startActivity(intent)
+                finishAffinity()
                 binding.pbLogin.visibility = GONE
             }
 
@@ -228,6 +230,7 @@ class LoginActivity : AppCompatActivity() {
             if(auth.currentUser!=null){
                 val intent = Intent(this, MenuActivity::class.java)
                 startActivity(intent)
+                finishAffinity()
                 binding.pbLogin.visibility = GONE
             }
         }
