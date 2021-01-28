@@ -9,6 +9,8 @@ import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import coil.load
 import com.google.firebase.auth.FirebaseAuth
@@ -117,8 +119,41 @@ class SelfProfileFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK && requestCode == 100) {
+            binding.pbAvatar.visibility = VISIBLE
+
             imageUri = data?.data
             binding.ibSelfProfileAvatar.load(imageUri)
+
+            if (imageUri.toString() != "null") {
+                val addingMap = hashMapOf<String, Any>()
+                val easyMap = hashMapOf<String, Any>()
+
+                val ref = Firebase.storage.reference.child("photos/${userUID}.jpg")
+
+                ref.putFile(imageUri!!).addOnSuccessListener {
+                    ref.downloadUrl.addOnSuccessListener { Uring ->
+
+                        val changing = userProfileChangeRequest {
+                            photoUri = Uring
+                        }
+
+                        auth.updateProfile(changing)
+                                .addOnSuccessListener {
+                                    easyMap.clear()
+                                    addingMap.clear()
+
+                                    easyMap["photo"] = Uring.toString()
+                                    addingMap["photo"] = Uring.toString()
+
+                                    db.collection("detailedprofile").document(auth.uid).update(addingMap)
+                                    db.collection("profile").document(auth.uid).update(easyMap)
+                                }
+
+                    }
+                }.addOnCompleteListener {
+                    binding.pbAvatar.visibility = GONE
+                }
+            }
         }
     }
 
@@ -171,32 +206,6 @@ class SelfProfileFragment : Fragment() {
 
         db.collection("detailedprofile").document(auth.uid).update(addingMap)
         db.collection("profile").document(auth.uid).update(easyMap)
-
-        if (imageUri.toString() != "null") {
-            val ref = Firebase.storage.reference.child("photos/${userUID}.jpg")
-
-            ref.putFile(imageUri!!).addOnSuccessListener {
-                ref.downloadUrl.addOnSuccessListener { Uring ->
-
-                    val changing = userProfileChangeRequest {
-                        photoUri = Uring
-                    }
-
-                    auth.updateProfile(changing)
-                            .addOnSuccessListener {
-                                easyMap.clear()
-                                addingMap.clear()
-
-                                easyMap["photo"] = Uring.toString()
-                                addingMap["photo"] = Uring.toString()
-
-                                db.collection("detailedprofile").document(auth.uid).update(addingMap)
-                                db.collection("profile").document(auth.uid).update(easyMap)
-                            }
-
-                }
-            }
-        }
 
     }
 }

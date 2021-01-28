@@ -39,39 +39,41 @@ class MyFirebaseMessagingService: FirebaseMessagingService() {
 
         super.onMessageReceived(message)
 
-        val intent = Intent(this, LoginActivity::class.java)
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val notificationID = 1
+        if(true){
+            val intent = Intent(this, LoginActivity::class.java)
+            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val notificationID = 1
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            createNotificationChannel(notificationManager)
-        }
-
-        var photoPers: Bitmap? = null
-        CoroutineScope(IO).launch {
-            if(message.data["photo"] != "null"){
-                photoPers = loadImage(message.data["photo"]!!)
-            }
-            else{
-                photoPers = ContextCompat.getDrawable(this@MyFirebaseMessagingService,R.drawable.ic_baseline_groups_24)?.toBitmap()
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                createNotificationChannel(notificationManager)
             }
 
-            withContext(Main){
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                val pendingIntent = PendingIntent.getActivity(this@MyFirebaseMessagingService, 0, intent, FLAG_ONE_SHOT)
-                val notification = NotificationCompat.Builder(this@MyFirebaseMessagingService, channelId)
-                        .setContentTitle(message.data["title"])
-                        .setContentText(message.data["message"])
-                        .setSmallIcon(R.drawable.vector_icon_small)
-                        .setLargeIcon(photoPers)
-                        .setAutoCancel(true)
-                        .setContentIntent(pendingIntent)
-                        .build()
+            var photoPers: Bitmap? = null
+            CoroutineScope(IO).launch {
+                if(message.data["photo"] != "null"){
+                    photoPers = loadImage(message.data["photo"]!!)
+                }
+                else{
+                    photoPers = ContextCompat.getDrawable(this@MyFirebaseMessagingService,R.drawable.ic_baseline_groups_24)?.toBitmap()
+                }
+
+                withContext(Main){
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    val pendingIntent = PendingIntent.getActivity(this@MyFirebaseMessagingService, 0, intent, FLAG_ONE_SHOT)
+                    val notification = NotificationCompat.Builder(this@MyFirebaseMessagingService, channelId)
+                            .setContentTitle(message.data["title"])
+                            .setContentText(message.data["message"])
+                            .setSmallIcon(R.drawable.vector_icon_small)
+                            .setLargeIcon(photoPers)
+                            .setAutoCancel(true)
+                            .setContentIntent(pendingIntent)
+                            .build()
 
                     notificationManager.notify(notificationID, notification)
 
                 }
             }
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
