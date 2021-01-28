@@ -14,16 +14,24 @@ TODO List:
     - Twitter Login
     
   - ~~Register screen~~
+  
   - ~~Reset password with Email screen~~
+  
   - ~~Messaging system~~
     - ~~Realtime message system~~
     - ~~Notification system~~ (Debug in-app notification)
+    
   - ~~Messages screen~~
+  
   - Community screen
     - ~~Show all users~~
     - User search bar
+    
   - Profile screen (Edit design)
     - ~~Self profile screen~~
     - ~~Others profile screen~~
+    
   - Settings screen
-  - Block user system
+    - Block user system
+    - Delete account system
+    - ~~On or off notifications~~
