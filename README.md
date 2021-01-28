@@ -22,7 +22,7 @@ TODO List:
   - Community screen
     - ~~Show all users~~
     - User search bar
-  - Profile screen
-    - Self profile screen
+  - Profile screen (Edit design)
+    - ~~Self profile screen~~
     - ~~Others profile screen~~
   - Settings screen
