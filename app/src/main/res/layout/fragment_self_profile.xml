@@ -57,7 +57,7 @@
                     android:text="ERROR!"
                     android:textAllCaps="false"
                     android:textColor="@color/customWhite"
-                    android:textSize="25sp"
+                    android:textSize="23sp"
                     app:layout_constraintBottom_toBottomOf="@+id/ibSelfProfileAvatar"
                     app:layout_constraintStart_toEndOf="@+id/ibSelfProfileAvatar"
                     app:layout_constraintTop_toTopOf="@+id/ibSelfProfileAvatar" />
@@ -302,7 +302,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/guideline13" />
 
-            <androidx.appcompat.widget.AppCompatEditText
+            <androidx.appcompat.widget.AppCompatMultiAutoCompleteTextView
                 android:id="@+id/etSelfProfileExp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -16,6 +16,26 @@
             android:layout_height="0dp"
             android:background="@drawable/backgroundmenu">
 
+            <ImageButton
+                android:id="@+id/btnProfileSendMessage"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="5dp"
+                android:background="#6E505C"
+                android:src="@drawable/ic_round_send_24"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/guideline13" />
+
+            <ImageButton
+                android:id="@+id/btnBlockUser"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="5dp"
+                android:background="#6E505C"
+                android:src="@drawable/ic_baseline_block_24"
+                app:layout_constraintEnd_toStartOf="@+id/btnProfileSendMessage"
+                app:layout_constraintTop_toTopOf="@+id/guideline13" />
+
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline13"
                 android:layout_width="wrap_content"
@@ -49,14 +69,15 @@
                     android:id="@+id/tvProfileName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="30dp"
+                    android:layout_marginLeft="30dp"
                     android:text="ERROR!"
                     android:textAllCaps="false"
                     android:textColor="@color/customWhite"
                     android:textSize="25sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/ivProfileAvatar"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/ivProfileAvatar"
-                    app:layout_constraintTop_toTopOf="@+id/ivProfileAvatar" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed" />
 
                 <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/guideline14"
@@ -214,15 +235,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/btnProfileSendMessage" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnProfileSendMessage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#6E505C"
-                android:text="SEND MESSAGE"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/guideline13" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

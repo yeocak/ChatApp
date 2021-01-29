@@ -2,6 +2,7 @@ package com.yeocak.chatapp.fragments
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +23,9 @@ class MessagesAdapter(
         val binding = SingleMessagesMenuBinding.bind(view)
     }
 
+    override fun getItemId(position: Int) = position.toLong()
+    override fun getItemViewType(position: Int) = position
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessagesViewHolder {
         return MessagesViewHolder(
                 LayoutInflater.from(parent.context).inflate(
@@ -41,10 +45,14 @@ class MessagesAdapter(
             db.collection("profile").document(current.uid).get().addOnSuccessListener {
 
                 binding.tvPersonName.text = it.data?.get("name").toString()
+                Log.d("Heyto", "${it.data?.get("photo").toString()} ${it.data?.get("name").toString()} ${current.lastMessage}")
                 if( it.data?.get("photo").toString() != "null"){
                     binding.ivPersonPhoto.load(
                             it.data?.get("photo").toString()
                     )
+                }
+                else{
+                    binding.ivPersonPhoto.load(R.drawable.ic_baseline_person_24)
                 }
                 binding.tvPersonMessage.text = current.lastMessage
 

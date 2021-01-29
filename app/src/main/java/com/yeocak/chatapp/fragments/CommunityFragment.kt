@@ -16,6 +16,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.yeocak.chatapp.*
+import com.yeocak.chatapp.LoginData.userUID
 import com.yeocak.chatapp.activities.MenuActivity
 import com.yeocak.chatapp.databinding.FragmentCommunityBinding
 import kotlinx.coroutines.currentCoroutineContext
@@ -25,6 +26,7 @@ class CommunityFragment : Fragment() {
     private lateinit var binding: FragmentCommunityBinding
     private lateinit var Fdb : FirebaseFirestore
     private lateinit var communityList : MutableList<SingleCommunity>
+    private lateinit var blockList : MutableSet<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,15 +34,31 @@ class CommunityFragment : Fragment() {
         Fdb = FirebaseFirestore.getInstance()
 
         communityList = mutableListOf<SingleCommunity>()
+        blockList = mutableSetOf()
 
-        Fdb.collection("profile").get().addOnSuccessListener {
-            for (document in it) {
-                if(document.id != Firebase.auth.currentUser!!.uid){
-                    val new = SingleCommunity(document.data["name"].toString(), document.id,document.data["photo"].toString())
-                    communityList.add(new)
+        Fdb.collection("profile").get().addOnSuccessListener { allUsers ->
+            Fdb.collection("block").document(userUID!!).collection("from").get().addOnSuccessListener { from ->
+                Fdb.collection("block").document(userUID!!).collection("to").get().addOnSuccessListener { to ->
+                    for(a in from){
+                        if(a["is"] == true){
+                            blockList.add(a.id)
+                        }
+                    }
+                    for(a in to){
+                        if(a["is"] == true){
+                            blockList.add(a.id)
+                        }
+                    }
+                    Log.d("Heyo",blockList.toString())
+                    for (document in allUsers) {
+                        if(document.id != userUID!! && !blockList.contains(document.id)){
+                            val new = SingleCommunity(document.data["name"].toString(), document.id,document.data["photo"].toString())
+                            communityList.add(new)
+                        }
+                    }
+                    createRecycler()
                 }
             }
-            createRecycler()
 
         }
     }

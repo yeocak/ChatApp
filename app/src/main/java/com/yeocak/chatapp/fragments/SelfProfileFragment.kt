@@ -56,8 +56,6 @@ class SelfProfileFragment : Fragment() {
         db = FirebaseFirestore.getInstance()
         auth = Firebase.auth.currentUser!!
 
-        Log.d("Heyy", auth.photoUrl.toString())
-
         db.collection("detailedprofile").document(auth.uid).get().addOnSuccessListener {
             binding.etSelfProfileName.setText(auth.displayName)
 

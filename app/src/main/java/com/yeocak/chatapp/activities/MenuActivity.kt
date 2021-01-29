@@ -26,10 +26,6 @@ class MenuActivity : AppCompatActivity() {
 
         auth = Firebase.auth
 
-        val map = mutableMapOf<String, Any>()
-
-        map["desc"] = "Tester"
-
         supportFragmentManager.beginTransaction().replace(R.id.frMain, MessagesFragment()).commit()
 
         binding.bottomNavigation.setOnNavigationItemSelectedListener {

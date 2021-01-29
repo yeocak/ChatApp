@@ -14,11 +14,11 @@ object DatabaseFun {
         }
 
         fun setup(tableName : String){
-            databasing.execSQL("CREATE TABLE IF NOT EXISTS $tableName (fromid TEXT PRIMARY KEY, message TEXT, isown TEXT)")
+            databasing.execSQL("CREATE TABLE IF NOT EXISTS $tableName (fromid TEXT PRIMARY KEY, message TEXT, date TEXT)")
         }
 
-        fun add(tableName: String, fromID: String, message: String, isOwn : Boolean){
-            databasing.execSQL("INSERT OR REPLACE INTO $tableName (fromid ,message, isown) VALUES ('$fromID' , '$message' , '$isOwn')")
+        fun add(tableName: String, fromID: String, message: String, date: String){
+            databasing.execSQL("INSERT OR REPLACE INTO $tableName (fromid ,message, date) VALUES ('$fromID' , '$message' , '$date')")
         }
 
         fun take(tableName: String): MutableList<SingleMessages>{
@@ -29,8 +29,8 @@ object DatabaseFun {
             while(cursor.moveToNext()){
                 returnList.add(SingleMessages(
                         cursor.getString(1),
-                        cursor.getString(2).toBoolean(),
-                        cursor.getString(0)
+                        cursor.getString(0),
+                        cursor.getString(2)
                 ))
             }
 
