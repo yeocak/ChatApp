@@ -168,7 +168,7 @@ class SelfProfileFragment : Fragment() {
 
         addingMap["desc"] = binding.etSelfProfileExp.text.toString()
 
-        if (!binding.etSelfProfileName.text.isNullOrEmpty()) {
+        if (!binding.etSelfProfileName.text.isNullOrEmpty() && binding.etSelfProfileName.text.toString() != "null") {
             userProfileChangeRequest {
                 displayName = binding.etSelfProfileName.text.toString()
             }
