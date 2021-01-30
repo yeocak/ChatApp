@@ -36,3 +36,13 @@ TODO List:
     - ~~On or off notifications~~
     
   - ~~Last messages screen~~
+  
+  Version 1.0 Released
+  
+  - Chat tab with keyboard slide
+  - App icon
+  - Google login bug fix
+  - Facebook token
+  - Message groups
+  - Photo and voice records
+  - Resize photos
