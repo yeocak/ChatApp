@@ -45,7 +45,7 @@ class FirebaseMessagingService: FirebaseMessagingService() {
                 createNotificationChannel(notificationManager)
             }
 
-            var photoPers: Bitmap? = null
+            var photoPers: Bitmap?
             CoroutineScope(IO).launch {
                 if(message.data["photo"] != "null"){
                     photoPers = loadImage(message.data["photo"]!!)
