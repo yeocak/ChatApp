@@ -2,8 +2,7 @@ package com.yeocak.chatapp
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
-import android.util.Log
-import com.yeocak.chatapp.activities.MessageActivity
+import androidx.core.database.getBlobOrNull
 
 object DatabaseFun {
 
@@ -14,11 +13,11 @@ object DatabaseFun {
         }
 
         fun setup(tableName : String){
-            databasing.execSQL("CREATE TABLE IF NOT EXISTS $tableName (fromid TEXT PRIMARY KEY, message TEXT, date TEXT)")
+            databasing.execSQL("CREATE TABLE IF NOT EXISTS $tableName (fromid TEXT PRIMARY KEY, message TEXT, name TEXT, photo TEXT, date TEXT)")
         }
 
-        fun add(tableName: String, fromID: String, message: String, date: String){
-            databasing.execSQL("INSERT OR REPLACE INTO $tableName (fromid ,message, date) VALUES ('$fromID' , '$message' , '$date')")
+        fun add(tableName: String, fromID: String, message: String, name: String, photo: String? , date: String){
+            databasing.execSQL("INSERT OR REPLACE INTO $tableName (fromid ,message, name, photo, date) VALUES ('$fromID' , '$message' , '$name' , '$photo' , '$date')")
         }
 
         fun take(tableName: String): MutableList<SingleMessages>{
@@ -27,11 +26,15 @@ object DatabaseFun {
             val returnList = mutableListOf<SingleMessages>()
 
             while(cursor.moveToNext()){
-                returnList.add(SingleMessages(
-                        cursor.getString(1),
-                        cursor.getString(0),
-                        cursor.getString(2)
-                ))
+                returnList.add(
+                        SingleMessages(
+                                cursor.getString(1),
+                                cursor.getString(0),
+                                cursor.getString(2),
+                                cursor.getString(3),
+                                cursor.getString(4),
+                        )
+                )
             }
 
             cursor.close()

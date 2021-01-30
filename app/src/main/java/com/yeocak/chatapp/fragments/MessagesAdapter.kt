@@ -2,6 +2,7 @@ package com.yeocak.chatapp.fragments
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +10,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreSettings
+import com.google.firebase.firestore.Source
 import com.google.firebase.ktx.Firebase
+import com.yeocak.chatapp.ImageConvert
 import com.yeocak.chatapp.R
 import com.yeocak.chatapp.SingleMessages
 import com.yeocak.chatapp.activities.MessageActivity
@@ -39,28 +43,24 @@ class MessagesAdapter(
     override fun onBindViewHolder(holder: MessagesViewHolder, position: Int) {
         val current = messagesList[position]
 
+        val photo = ImageConvert.getBitmap(current.photo)
+
         with(holder){
-            val db = FirebaseFirestore.getInstance()
 
-            db.collection("profile").document(current.uid).get().addOnSuccessListener {
-
-                binding.tvPersonName.text = it.data?.get("name").toString()
-                Log.d("Heyto", "${it.data?.get("photo").toString()} ${it.data?.get("name").toString()} ${current.lastMessage}")
-                if( it.data?.get("photo").toString() != "null"){
-                    binding.ivPersonPhoto.load(
-                            it.data?.get("photo").toString()
-                    )
-                }
-                else{
-                    binding.ivPersonPhoto.load(R.drawable.ic_baseline_person_24)
-                }
-                binding.tvPersonMessage.text = current.lastMessage
-
+            binding.tvPersonName.text = current.name
+            binding.tvPersonMessage.text = current.lastMessage
+            if(photo.toString() != "null"){
+                binding.ivPersonPhoto.load(photo)
             }
+            else{
+                binding.ivPersonPhoto.load(R.drawable.ic_baseline_person_24)
+            }
+
 
             binding.layoutBlock.setOnClickListener {
                 val intent = Intent(context, MessageActivity::class.java)
                 intent.putExtra("uid",current.uid)
+                intent.putExtra("photo",current.photo)
                 context.startActivity(intent)
             }
         }

@@ -11,13 +11,13 @@
         android:layout_height="match_parent">
 
         <SearchView
-            android:id="@+id/svFriend"
+            android:id="@+id/svCommunity"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:queryHint="Search a friend"
             app:layout_constraintBottom_toTopOf="@+id/guideline10"
-            app:layout_constraintEnd_toStartOf="@+id/btnAddFriend"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -31,17 +31,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/guideline10" />
-
-        <ImageButton
-            android:id="@+id/btnAddFriend"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:backgroundTint="#00FFFFFF"
-            android:src="@drawable/icon_person_add"
-            app:layout_constraintBottom_toTopOf="@+id/guideline10"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline10"

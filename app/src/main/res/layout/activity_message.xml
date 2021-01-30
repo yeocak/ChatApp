@@ -36,6 +36,14 @@
             android:background="#00FFFFFF"
             app:srcCompat="@drawable/ic_go_back_white" />
 
+        <ImageView
+            android:id="@+id/ivPartnerPhoto"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/ic_baseline_person_24" />
+
         <TextView
             android:id="@+id/tvPartnerName"
             android:layout_width="wrap_content"

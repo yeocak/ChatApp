@@ -1,30 +1,36 @@
 package com.yeocak.chatapp.activities
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.ContactsContract
+import android.util.DisplayMetrics
 import android.util.Log
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
+import com.yeocak.chatapp.DatabaseFun
+import com.yeocak.chatapp.ImageConvert
 import com.yeocak.chatapp.R
 import com.yeocak.chatapp.databinding.ActivityMenuBinding
 import com.yeocak.chatapp.fragments.CommunityFragment
+import com.yeocak.chatapp.fragments.CommunityFragment.Companion.transferinWidth
 import com.yeocak.chatapp.fragments.MessagesFragment
 import com.yeocak.chatapp.fragments.SelfProfileFragment
 import com.yeocak.chatapp.fragments.SettingsFragment
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class MenuActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMenuBinding
-    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMenuBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        auth = Firebase.auth
+        val displayMetrics = DisplayMetrics()
+        windowManager?.defaultDisplay!!.getRealMetrics(displayMetrics)
+        transferinWidth = displayMetrics.xdpi
 
         supportFragmentManager.beginTransaction().replace(R.id.frMain, MessagesFragment()).commit()
 

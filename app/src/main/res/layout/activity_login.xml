@@ -143,8 +143,7 @@
         android:layout_margin="15dp"
         android:paddingRight="5dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
-        app:layout_constraintEnd_toStartOf="@+id/btnTwitter"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/btnFacebook"
         app:layout_constraintTop_toBottomOf="@+id/tvForgot"
         app:layout_constraintVertical_bias="0.505"
@@ -162,18 +161,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvForgot"
         app:srcCompat="@drawable/facebook" />
-
-    <ImageView
-        android:id="@+id/btnTwitter"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_margin="15dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btnGoogle"
-        app:layout_constraintTop_toBottomOf="@+id/tvForgot"
-        app:srcCompat="@drawable/twitter" />
 
     <ProgressBar
         android:id="@+id/pbLogin"

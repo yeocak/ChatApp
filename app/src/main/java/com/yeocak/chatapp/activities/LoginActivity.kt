@@ -22,6 +22,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.ktx.Firebase
 import com.yeocak.chatapp.DatabaseFun
@@ -184,6 +185,12 @@ class LoginActivity : AppCompatActivity() {
         userUID = auth.currentUser?.uid
 
         val db = FirebaseFirestore.getInstance()
+
+        val settings = FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(false)
+                .build()
+
+        db.firestoreSettings = settings
 
         db.collection("detailedprofile").document(auth.currentUser!!.uid).get().addOnSuccessListener {
 

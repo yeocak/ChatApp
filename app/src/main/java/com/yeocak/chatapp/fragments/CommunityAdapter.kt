@@ -38,6 +38,9 @@ class CommunityAdapter(
             if(current.photo != "null"){
                 binding.ivCommunityImage.load(current.photo)
             }
+            else{
+                binding.ivCommunityImage.load(R.drawable.ic_baseline_person_24)
+            }
 
 
             binding.layoutCommunity.setOnClickListener {

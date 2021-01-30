@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
+import coil.load
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
@@ -17,6 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.yeocak.chatapp.*
 import com.yeocak.chatapp.LoginData.userUID
+import com.yeocak.chatapp.R
 import com.yeocak.chatapp.databinding.ActivityMessageBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -53,6 +55,14 @@ class MessageActivity : AppCompatActivity() {
 
         auth = Firebase.auth.currentUser!! // User auth
         partnerUid = intent.getStringExtra("uid")!! // Partner's uid
+        if(!intent.getStringExtra("photo").isNullOrEmpty()){
+            val partnerPhoto = ImageConvert.getBitmap(intent.getStringExtra("photo"))
+            binding.ivPartnerPhoto.load(partnerPhoto)
+        }
+        else{
+            binding.ivPartnerPhoto.load(R.drawable.ic_baseline_person_24)
+        }
+
 
 
         val firestore = FirebaseFirestore.getInstance().collection("profile").document(partnerUid) // Getting profile databases
