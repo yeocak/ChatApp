@@ -43,7 +43,7 @@ object ImageConvert {
 
             context.imageLoader.execute(request)
         }catch (e: Exception){
-            FirebaseCrashlytics.getInstance().setCustomKey("imageDownload", e.localizedMessage)
+            FirebaseCrashlytics.getInstance().setCustomKey("imageDownload", "Error Image Converting : ${e.localizedMessage}")
         }
 
 
