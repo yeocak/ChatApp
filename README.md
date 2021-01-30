@@ -7,11 +7,10 @@
 ![](https://raw.githubusercontent.com/yeocak/ChatApp/master/github_images/login_land.png)
 
 TODO List:
-  - Login screen
+  - ~~Login screen~~ (1 Bug?)
     - ~~Email and Password Login~~
     - ~~Facebook Login~~
     - ~~Google Login~~
-    - Twitter Login
     
   - ~~Register screen~~
   
@@ -23,9 +22,9 @@ TODO List:
     
   - ~~Messages screen~~
   
-  - Community screen
+  - ~~Community screen~~
     - ~~Show all users~~
-    - User search bar
+    - ~~User search bar~~
     
   - Profile screen (Edit design)
     - ~~Self profile screen~~
