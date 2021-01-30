@@ -1,4 +1,4 @@
-package com.yeocak.chatapp
+package com.yeocak.chatapp.notification
 
 data class NotificationData (
     var title: String, // this is sender name

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.SettingsFragment">
+    tools:context=".fragments.settings.SettingsFragment">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -58,7 +58,7 @@
                 android:layout_marginBottom="3dp"
                 android:background="#22223B"
                 android:fontFamily="sans-serif-thin"
-                android:text="Show Blocked Users (Not Done)"
+                android:text="Show Blocked Users"
                 android:textAllCaps="false"
                 android:textColor="@color/customWhite"
                 android:textSize="18sp"
@@ -79,6 +79,20 @@
 
 
             <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnAboutMe"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginBottom="3dp"
+                android:background="#22223B"
+                android:fontFamily="sans-serif-thin"
+                android:stateListAnimator="@android:anim/fade_in"
+                android:text="About Me"
+                android:textAllCaps="false"
+                android:textColor="@color/customWhite"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnSignOut"
                 android:layout_width="fill_parent"
                 android:layout_height="40dp"
@@ -91,54 +105,16 @@
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/textView5"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginRight="10dp"
-                android:text="This is a simple exercise app. In this app I used this technologies, APIs and libraries:"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/textView6"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="3dp"
-                android:layout_marginRight="15dp"
-
-                android:text=" -Firebase (Auth, Analytics, Firestore, Storage, FCM, Realtime Database)\n
-    -Coil\n
-    -Kotlin Coroutines\n
-    -Facebook Android SDK\n\n
-    -View Binding\n
-    -SQLite"
-                android:textSize="15sp" />
-
-            <TextView
-                android:id="@+id/textView7"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="10dp"
-                android:text="If you want check the codes, you can visit my github page."
-                android:textSize="18sp" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnGithub"
-                android:layout_width="fill_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="10dp"
-                android:background="#fb8532"
-                android:fontFamily="sans-serif-smallcaps"
-                android:text="GO GITHUB"
-                android:textColor="@color/customWhite"
-                android:textSize="18sp"
-                android:textStyle="bold" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
+    <FrameLayout
+        android:id="@+id/flTopSettings"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:visibility="visible">
+
+    </FrameLayout>
 
 </FrameLayout>

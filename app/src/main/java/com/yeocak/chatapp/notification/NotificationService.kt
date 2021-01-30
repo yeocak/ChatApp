@@ -1,7 +1,7 @@
-package com.yeocak.chatapp
+package com.yeocak.chatapp.notification
 
-import com.yeocak.chatapp.Constants.Companion.CONTENT_TYPE
-import com.yeocak.chatapp.Constants.Companion.SERVER_KEY
+import com.yeocak.chatapp.notification.Constants.Companion.CONTENT_TYPE
+import com.yeocak.chatapp.notification.Constants.Companion.SERVER_KEY
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body

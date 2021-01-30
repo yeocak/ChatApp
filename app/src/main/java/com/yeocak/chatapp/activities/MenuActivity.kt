@@ -1,23 +1,16 @@
 package com.yeocak.chatapp.activities
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.ContactsContract
 import android.util.DisplayMetrics
-import android.util.Log
-import com.yeocak.chatapp.DatabaseFun
-import com.yeocak.chatapp.ImageConvert
 import com.yeocak.chatapp.R
 import com.yeocak.chatapp.databinding.ActivityMenuBinding
 import com.yeocak.chatapp.fragments.CommunityFragment
 import com.yeocak.chatapp.fragments.CommunityFragment.Companion.transferinWidth
 import com.yeocak.chatapp.fragments.MessagesFragment
 import com.yeocak.chatapp.fragments.SelfProfileFragment
-import com.yeocak.chatapp.fragments.SettingsFragment
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import com.yeocak.chatapp.fragments.settings.SettingsFragment
 
 class MenuActivity : AppCompatActivity() {
 
@@ -27,6 +20,8 @@ class MenuActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMenuBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        menuActivity = this
 
         val displayMetrics = DisplayMetrics()
         windowManager?.defaultDisplay!!.getRealMetrics(displayMetrics)
@@ -58,6 +53,12 @@ class MenuActivity : AppCompatActivity() {
                 else -> false
             }
         }
+
+    }
+
+    companion object{
+
+        var menuActivity : Context? = null
 
     }
 

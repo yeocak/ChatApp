@@ -3,7 +3,6 @@ package com.yeocak.chatapp.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.ContactsContract
 import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
@@ -20,6 +19,9 @@ import com.yeocak.chatapp.*
 import com.yeocak.chatapp.LoginData.userUID
 import com.yeocak.chatapp.R
 import com.yeocak.chatapp.databinding.ActivityMessageBinding
+import com.yeocak.chatapp.notification.NotificationData
+import com.yeocak.chatapp.notification.PushNotification
+import com.yeocak.chatapp.notification.RetrofitObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -51,6 +53,8 @@ class MessageActivity : AppCompatActivity() {
         binding = ActivityMessageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        LoginData.inMessages = true
+
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
         auth = Firebase.auth.currentUser!! // User auth
@@ -72,6 +76,8 @@ class MessageActivity : AppCompatActivity() {
                     partnerPhone = it["currentPhone"].toString()
                     binding.tvPartnerName.text = partnerName
                 }
+
+        Log.d("uid",partnerUid + " |  " + userUID)
 
         val realtimeKey = combineUID(auth.uid, partnerUid) // Getting real time databases and messages
         realtime = Firebase.database("https://chatapp-35faa-default-rtdb.europe-west1.firebasedatabase.app/").getReference("$realtimeKey")
@@ -175,7 +181,7 @@ class MessageActivity : AppCompatActivity() {
         try {
             val response = RetrofitObject.api.postNotification(notification)
             if(response.isSuccessful) {
-                Log.e("Sending","Not Sended")
+                Log.e("Sending","Sended")
             } else {
                 Log.e("Sending", "Error 1 : ${response.errorBody().toString()}")
 
@@ -220,5 +226,10 @@ class MessageActivity : AppCompatActivity() {
             }
         }
         return (first+second)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        LoginData.inMessages = false
     }
 }

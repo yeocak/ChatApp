@@ -10,7 +10,9 @@ import coil.ImageLoader
 import coil.imageLoader
 import coil.request.ImageRequest
 import coil.request.SuccessResult
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import java.io.ByteArrayOutputStream
+import java.lang.Exception
 
 object ImageConvert {
 
@@ -29,7 +31,9 @@ object ImageConvert {
     suspend fun downloadImageBitmap(imageURL: String, context: Context): Bitmap? {
 
         var bitmapNow: Bitmap? = null
-        val request = ImageRequest.Builder(context)
+
+        try {
+            val request = ImageRequest.Builder(context)
                 .data(imageURL)
                 .target{
                     bitmapNow = (it as BitmapDrawable).bitmap
@@ -37,7 +41,13 @@ object ImageConvert {
                 .build()
 
 
-        context.imageLoader.execute(request)
+            context.imageLoader.execute(request)
+        }catch (e: Exception){
+            FirebaseCrashlytics.getInstance().setCustomKey("imageDownload", e.localizedMessage)
+        }
+
+
+        Log.d("Image","Converted $bitmapNow")
 
         return bitmapNow
     }

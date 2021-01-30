@@ -50,11 +50,6 @@ class LoginActivity : AppCompatActivity() {
 
         auth = Firebase.auth
 
-        FirebaseInstanceId.getInstance().token?.let {
-            phoneToken = it
-        }
-        // TODO("Bu ikisini düzelt, login öncesi yap")
-
         if(auth.currentUser != null){
             updateActivity()
         }
@@ -89,9 +84,11 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun signFacebook(){
-        LoginManager.getInstance().logInWithReadPermissions(this, listOf("public_profile", "email"))
+        val lm = LoginManager.getInstance()
 
-        LoginManager.getInstance().registerCallback(this.callbackManager, object :
+        lm.logInWithReadPermissions(this, listOf("public_profile", "email"))
+
+        lm.registerCallback(this.callbackManager, object :
                 FacebookCallback<LoginResult> {
             override fun onSuccess(loginResult: LoginResult) {
                 Log.d("Facebook", "facebook:onSuccess:$loginResult")
@@ -179,6 +176,11 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun updateActivity(){
+
+        FirebaseInstanceId.getInstance().token?.let {
+            phoneToken = it
+        }
+
         DatabaseFun.creating(this,auth.currentUser!!.uid)
         DatabaseFun.setup("last_messages")
 
@@ -195,8 +197,8 @@ class LoginActivity : AppCompatActivity() {
         db.collection("detailedprofile").document(auth.currentUser!!.uid).get().addOnSuccessListener {
 
             if(it["name"].toString() == "null"){
-                FirebaseFirestore.getInstance().collection("block").document(auth.currentUser!!.uid).collection("from").document("system").set(hashMapOf<String,Any>())
-                FirebaseFirestore.getInstance().collection("block").document(auth.currentUser!!.uid).collection("to").document("system").set(hashMapOf<String,Any>())
+                db.collection("block").document(auth.currentUser!!.uid).collection("from").document("system").set(hashMapOf<String,Any>())
+                db.collection("block").document(auth.currentUser!!.uid).collection("to").document("system").set(hashMapOf<String,Any>())
 
                 val userName = auth.currentUser?.displayName
                 val inserting = HashMap<String,String>()
@@ -216,9 +218,8 @@ class LoginActivity : AppCompatActivity() {
 
                     db.collection("detailedprofile").document(userUID!!).set(inserting).addOnSuccessListener {
 
-                        val intent = Intent(this, MenuActivity::class.java)
+                        val intent = Intent(this, WelcomeActivity::class.java)
                         startActivity(intent)
-                        finishAffinity()
                         binding.pbLogin.visibility = GONE
 
                     }
@@ -226,17 +227,15 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
             else{
-                val intent = Intent(this, MenuActivity::class.java)
+                val intent = Intent(this, WelcomeActivity::class.java)
                 startActivity(intent)
-                finishAffinity()
                 binding.pbLogin.visibility = GONE
             }
 
         }.addOnFailureListener {
             if(auth.currentUser!=null){
-                val intent = Intent(this, MenuActivity::class.java)
+                val intent = Intent(this, WelcomeActivity::class.java)
                 startActivity(intent)
-                finishAffinity()
                 binding.pbLogin.visibility = GONE
             }
         }

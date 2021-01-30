@@ -44,6 +44,7 @@ class MessagesAdapter(
         val current = messagesList[position]
 
         val photo = ImageConvert.getBitmap(current.photo)
+        Log.d("img", "Ops: $photo")
 
         with(holder){
 

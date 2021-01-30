@@ -1,9 +1,8 @@
-package com.yeocak.chatapp
+package com.yeocak.chatapp.notification
 
-import com.yeocak.chatapp.Constants.Companion.BASE_URL
+import com.yeocak.chatapp.notification.Constants.Companion.BASE_URL
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 
 class RetrofitObject {
 
