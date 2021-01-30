@@ -35,3 +35,5 @@ TODO List:
     - Block user system
     - Delete account system
     - ~~On or off notifications~~
+    
+  - ~~Last messages screen~~
