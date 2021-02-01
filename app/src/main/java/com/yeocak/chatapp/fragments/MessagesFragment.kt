@@ -1,15 +1,12 @@
 package com.yeocak.chatapp.fragments
 
-import android.graphics.Bitmap
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import coil.load
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -35,7 +32,7 @@ class MessagesFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         binding = FragmentMessagesBinding.inflate(layoutInflater)
 
-        messages = DatabaseFun.take("last_messages")
+        messages = DatabaseFun.takeLastMessages("last_messages")
         messages.sortByDescending { it.date }
 
         adapting = MessagesAdapter(messages, (activity as MenuActivity))
@@ -60,7 +57,7 @@ class MessagesFragment : Fragment() {
                                 val photoBits = ImageConvert.downloadImageBitmap(it["photo"].toString(), menuActivity!!)
                                 val photoString = ImageConvert.getImageString(photoBits)
 
-                                DatabaseFun.add("last_messages",
+                                DatabaseFun.addLastMessage("last_messages",
                                     a.key!!,
                                     a.child("last").value.toString(),
                                     it["name"].toString(),
@@ -68,7 +65,7 @@ class MessagesFragment : Fragment() {
                                     a.child("date").value.toString())
 
                             withContext(Main){
-                                updateRV(DatabaseFun.take("last_messages"))
+                                updateRV(DatabaseFun.takeLastMessages("last_messages"))
                             }
 
                             delay(1000)

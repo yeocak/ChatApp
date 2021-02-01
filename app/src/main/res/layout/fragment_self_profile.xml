@@ -6,317 +6,368 @@
     android:layout_height="match_parent"
     tools:context=".fragments.ProfilesFragment">
 
-    <androidx.core.widget.NestedScrollView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:background="@drawable/backgroundmenu"
+        android:orientation="vertical">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:background="@drawable/backgroundmenu">
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline13"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_begin="125dp" />
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:fillViewport="true">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/constraintLayout"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:background="#6E505C"
-                app:layout_constraintBottom_toTopOf="@+id/guideline13"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <androidx.appcompat.widget.AppCompatImageButton
-                    android:id="@+id/ibSelfProfileAvatar"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="5dp"
-                    android:background="#00FFFFFF"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/ic_baseline_person_24"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline14"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/etSelfProfileName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="30dp"
-                    android:drawableStart="@drawable/ic_baseline_edit_24"
-                    android:drawablePadding="10dp"
-                    android:padding="10dp"
-                    android:text="ERROR!"
-                    android:textAllCaps="false"
-                    android:textColor="@color/customWhite"
-                    android:textSize="23sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/ibSelfProfileAvatar"
-                    app:layout_constraintStart_toEndOf="@+id/ibSelfProfileAvatar"
-                    app:layout_constraintTop_toTopOf="@+id/ibSelfProfileAvatar" />
-
-                <ProgressBar
-                    android:id="@+id/pbAvatar"
-                    style="?android:attr/progressBarStyleLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="@+id/ibSelfProfileAvatar"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline14"
-                    app:layout_constraintStart_toStartOf="@+id/ibSelfProfileAvatar"
-                    app:layout_constraintTop_toTopOf="@+id/ibSelfProfileAvatar" />
-
+                android:layout_width="match_parent"
+                android:layout_height="0dp">
 
                 <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/guideline14"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_begin="125dp" />
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/constraintLayout2"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="20dp"
-                android:background="#353A47"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <LinearLayout
-                    android:id="@+id/layoutSelfProfileYoutube"
+                    android:id="@+id/guideline13"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:visibility="visible"
-                    app:layout_constraintBottom_toTopOf="@+id/layoutSelfProfileInstagram"
+                    app:layout_constraintGuide_begin="125dp" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraintLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="#6E505C"
+                    app:layout_constraintBottom_toTopOf="@+id/guideline13"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <CheckBox
-                        android:id="@+id/cbSelfProfileYoutube"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:gravity="center" />
-
-                    <ImageView
-                        android:id="@+id/imageView6"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="1"
-                        android:src="@drawable/icon_youtube_colored" />
-
-                    <TextView
-                        android:id="@+id/tvSlash1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_margin="3dp"
-                        android:layout_weight="1"
-                        android:hint="/"
-                        android:textSize="25sp"
-                        android:textStyle="bold" />
+                    <androidx.appcompat.widget.AppCompatImageButton
+                        android:id="@+id/ibSelfProfileAvatar"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:background="#00FFFFFF"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/ic_baseline_person_24"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/guideline14"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.appcompat.widget.AppCompatEditText
-                        android:id="@+id/etSelfProfileYoutube"
+                        android:id="@+id/etSelfProfileName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="1"
-                        android:hint="idhere"
-                        android:textSize="17sp" />
-                </LinearLayout>
+                        android:layout_margin="30dp"
+                        android:drawableStart="@drawable/ic_baseline_edit_24"
+                        android:drawablePadding="10dp"
+                        android:padding="10dp"
+                        android:text="ERROR!"
+                        android:textAllCaps="false"
+                        android:textColor="@color/customWhite"
+                        android:textSize="23sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/ibSelfProfileAvatar"
+                        app:layout_constraintStart_toEndOf="@+id/ibSelfProfileAvatar"
+                        app:layout_constraintTop_toTopOf="@+id/ibSelfProfileAvatar" />
 
-                <LinearLayout
-                    android:id="@+id/layoutSelfProfileFacebook"
-                    android:layout_width="wrap_content"
+                    <ProgressBar
+                        android:id="@+id/pbAvatar"
+                        style="?android:attr/progressBarStyleLarge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="@+id/ibSelfProfileAvatar"
+                        app:layout_constraintEnd_toStartOf="@+id/guideline14"
+                        app:layout_constraintStart_toStartOf="@+id/ibSelfProfileAvatar"
+                        app:layout_constraintTop_toTopOf="@+id/ibSelfProfileAvatar" />
+
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline14"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_begin="125dp" />
+
+                    <ImageButton
+                        android:id="@+id/btnRemovePhoto"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:background="#00FFFFFF"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/ic_baseline_cancel_24"
+                        android:tint="#FFFFFF"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="@+id/ibSelfProfileAvatar"
+                        app:layout_constraintEnd_toEndOf="@+id/ibSelfProfileAvatar" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraintLayout2"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:visibility="visible"
-                    app:layout_constraintBottom_toTopOf="@+id/layoutSelfProfileTwitter"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/layoutSelfProfileInstagram">
-
-                    <CheckBox
-                        android:id="@+id/cbSelfProfileFacebook"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:gravity="center" />
-
-                    <ImageView
-                        android:id="@+id/imageView7"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="1"
-                        android:src="@drawable/icon_facebook_colored" />
-
-                    <TextView
-                        android:id="@+id/tvSlash3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_margin="3dp"
-                        android:layout_weight="1"
-                        android:hint="/"
-                        android:textSize="25sp"
-                        android:textStyle="bold" />
-
-                    <androidx.appcompat.widget.AppCompatEditText
-                        android:id="@+id/etSelfProfileFacebook"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="1"
-                        android:hint="idhere"
-                        android:textSize="17sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/layoutSelfProfileInstagram"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:visibility="visible"
-                    app:layout_constraintBottom_toTopOf="@+id/layoutSelfProfileFacebook"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/layoutSelfProfileYoutube">
-
-                    <CheckBox
-                        android:id="@+id/cbSelfProfileInstagram"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:gravity="center" />
-
-                    <ImageView
-                        android:id="@+id/imageView8"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="1"
-                        android:src="@drawable/icon_instagram_colored" />
-
-                    <TextView
-                        android:id="@+id/tvSlash2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_margin="3dp"
-                        android:layout_weight="1"
-                        android:hint="/"
-                        android:textSize="25sp"
-                        android:textStyle="bold" />
-
-                    <androidx.appcompat.widget.AppCompatEditText
-                        android:id="@+id/etSelfProfileInstagram"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="1"
-                        android:hint="idhere"
-                        android:textSize="17sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/layoutSelfProfileTwitter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:visibility="visible"
+                    android:layout_margin="20dp"
+                    android:background="#353A47"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <LinearLayout
+                        android:id="@+id/layoutSelfProfileYoutube"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:visibility="visible"
+                        app:layout_constraintBottom_toTopOf="@+id/layoutSelfProfileInstagram"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <CheckBox
+                            android:id="@+id/cbSelfProfileYoutube"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:gravity="center" />
+
+                        <ImageView
+                            android:id="@+id/imageView6"
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:src="@drawable/icon_youtube_colored" />
+
+                        <TextView
+                            android:id="@+id/tvSlash1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_margin="3dp"
+                            android:layout_weight="1"
+                            android:hint="/"
+                            android:textSize="25sp"
+                            android:textStyle="bold" />
+
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/etSelfProfileYoutube"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:hint="enter your id"
+                            android:textSize="17sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutSelfProfileFacebook"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:visibility="visible"
+                        app:layout_constraintBottom_toTopOf="@+id/layoutSelfProfileTwitter"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/layoutSelfProfileInstagram">
+
+                        <CheckBox
+                            android:id="@+id/cbSelfProfileFacebook"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:gravity="center" />
+
+                        <ImageView
+                            android:id="@+id/imageView7"
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:src="@drawable/icon_facebook_colored" />
+
+                        <TextView
+                            android:id="@+id/tvSlash3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_margin="3dp"
+                            android:layout_weight="1"
+                            android:hint="/"
+                            android:textSize="25sp"
+                            android:textStyle="bold" />
+
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/etSelfProfileFacebook"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:hint="enter your id"
+                            android:textSize="17sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutSelfProfileInstagram"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:visibility="visible"
+                        app:layout_constraintBottom_toTopOf="@+id/layoutSelfProfileFacebook"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/layoutSelfProfileYoutube">
+
+                        <CheckBox
+                            android:id="@+id/cbSelfProfileInstagram"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:gravity="center" />
+
+                        <ImageView
+                            android:id="@+id/imageView8"
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:src="@drawable/icon_instagram_colored" />
+
+                        <TextView
+                            android:id="@+id/tvSlash2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_margin="3dp"
+                            android:layout_weight="1"
+                            android:hint="/"
+                            android:textSize="25sp"
+                            android:textStyle="bold" />
+
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/etSelfProfileInstagram"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:hint="enter your id"
+                            android:textSize="17sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutSelfProfileTwitter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:visibility="visible"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/layoutSelfProfileFacebook">
+
+                        <CheckBox
+                            android:id="@+id/cbSelfProfileTwitter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:gravity="center" />
+
+                        <ImageView
+                            android:id="@+id/imageView9"
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:src="@drawable/icon_twitter_colored" />
+
+                        <TextView
+                            android:id="@+id/tvSlash4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_margin="3dp"
+                            android:layout_weight="1"
+                            android:hint="/"
+                            android:textSize="25sp"
+                            android:textStyle="bold" />
+
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/etSelfProfileTwitter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:hint="enter your id"
+                            android:textSize="17sp" />
+                    </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnSelfProfileView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#6E505C"
+                    android:text="View as specific person"
+                    android:textAllCaps="false"
+                    android:textColor="@color/customWhite"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/guideline13" />
+
+                <androidx.appcompat.widget.AppCompatMultiAutoCompleteTextView
+                    android:id="@+id/etSelfProfileExp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp"
+                    android:text="No self introduction :("
+                    android:textColor="@color/customWhite"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/layoutSelfProfileFacebook">
+                    app:layout_constraintTop_toBottomOf="@+id/btnSelfProfileView" />
 
-                    <CheckBox
-                        android:id="@+id/cbSelfProfileTwitter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:gravity="center" />
 
-                    <ImageView
-                        android:id="@+id/imageView9"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="1"
-                        android:src="@drawable/icon_twitter_colored" />
-
-                    <TextView
-                        android:id="@+id/tvSlash4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_margin="3dp"
-                        android:layout_weight="1"
-                        android:hint="/"
-                        android:textSize="25sp"
-                        android:textStyle="bold" />
-
-                    <androidx.appcompat.widget.AppCompatEditText
-                        android:id="@+id/etSelfProfileTwitter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="1"
-                        android:hint="idhere"
-                        android:textSize="17sp" />
-                </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <LinearLayout
+            android:id="@+id/layoutChanges"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="15"
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnSelfProfileView"
+                android:id="@+id/btnSaveChanges"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="#6E505C"
-                android:text="View as specific person"
-                android:textAllCaps="false"
-                android:textColor="@color/customWhite"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/guideline13" />
-
-            <androidx.appcompat.widget.AppCompatMultiAutoCompleteTextView
-                android:id="@+id/etSelfProfileExp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="15dp"
-                android:text="No self introduction :("
-                android:textColor="@color/customWhite"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:backgroundTint="#006822"
+                android:text="Save Changes"
                 android:textSize="16sp"
-                app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/btnSelfProfileView" />
+                android:textStyle="bold" />
 
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnUndoChanges"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:backgroundTint="#A53434"
+                android:text="Undo Changes"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
 
 </FrameLayout>

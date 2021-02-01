@@ -47,17 +47,17 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_margin="15dp"
-        app:layout_constraintBottom_toBottomOf="@+id/btnGoogle"
-        app:layout_constraintEnd_toStartOf="@+id/btnGoogle"
+        app:layout_constraintBottom_toBottomOf="@+id/btnGithub"
+        app:layout_constraintEnd_toStartOf="@+id/btnGithub"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toEndOf="@+id/imageView"
         app:layout_constraintStart_toStartOf="@+id/guideline4"
-        app:layout_constraintTop_toTopOf="@+id/btnGoogle"
+        app:layout_constraintTop_toTopOf="@+id/btnGithub"
         app:srcCompat="@drawable/facebook" />
 
     <ImageView
-        android:id="@+id/btnGoogle"
+        android:id="@+id/btnGithub"
         android:layout_width="65dp"
         android:layout_height="60dp"
         android:layout_margin="15dp"

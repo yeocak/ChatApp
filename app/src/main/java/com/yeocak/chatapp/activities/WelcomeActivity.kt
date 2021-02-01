@@ -27,7 +27,6 @@ class WelcomeActivity : AppCompatActivity() {
         if(Firebase.auth.currentUser != null){
 
             LoginData.userUID = Firebase.auth.currentUser!!.uid
-            DatabaseFun.creating(this,Firebase.auth.currentUser!!.uid)
 
             val intent = Intent(this, MenuActivity::class.java)
             startActivity(intent)

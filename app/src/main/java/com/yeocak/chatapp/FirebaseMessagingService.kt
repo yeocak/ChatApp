@@ -18,6 +18,7 @@ import coil.request.ImageRequest
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.yeocak.chatapp.activities.LoginActivity
+import com.yeocak.chatapp.activities.WelcomeActivity
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
@@ -37,7 +38,7 @@ class FirebaseMessagingService: FirebaseMessagingService() {
         val isNotificationOn = sharedPref!!.getBoolean("notification${LoginData.userUID}", true)
 
         if(isNotificationOn && !LoginData.inMessages){
-            val intent = Intent(this, LoginActivity::class.java)
+            val intent = Intent(this, WelcomeActivity::class.java)
             val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             val notificationID = 1
 

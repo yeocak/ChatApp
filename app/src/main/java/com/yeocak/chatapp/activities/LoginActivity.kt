@@ -7,39 +7,39 @@ import android.view.View
 import android.view.View.*
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.facebook.AccessToken
-import com.facebook.CallbackManager
-import com.facebook.FacebookCallback
-import com.facebook.FacebookException
-import com.facebook.login.LoginManager
-import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.FacebookAuthProvider
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.OAuthProvider
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.ktx.Firebase
-import com.yeocak.chatapp.DatabaseFun
 import com.yeocak.chatapp.LoginData.phoneToken
 import com.yeocak.chatapp.LoginData.userUID
 import com.yeocak.chatapp.R
 import com.yeocak.chatapp.databinding.ActivityLoginBinding
 
+
 class LoginActivity : AppCompatActivity() {
 
-    private lateinit var callbackManager: CallbackManager
     private lateinit var auth: FirebaseAuth
 
     private lateinit var binding : ActivityLoginBinding
 
     private lateinit var googleClient: GoogleSignInClient
     private lateinit var googleOptions: GoogleSignInOptions
+
+    private lateinit var githubProvider : OAuthProvider.Builder
+
     private val RC_SIGN_IN = 1
 
 
@@ -54,15 +54,15 @@ class LoginActivity : AppCompatActivity() {
             updateActivity()
         }
 
-        callbackManager = CallbackManager.Factory.create()
-
-        binding.btnFacebook.setOnClickListener{
+        binding.btnGithub.setOnClickListener {
+            githubProvider = OAuthProvider.newBuilder("github.com")
             binding.pbLogin.visibility = VISIBLE
-            signFacebook()
+
+            signGithub()
         }
 
 
-        binding.btnGoogle.setOnClickListener {
+        binding.btnGoogle!!.setOnClickListener {
             binding.pbLogin.visibility = VISIBLE
             signGoogle()
         }
@@ -72,61 +72,44 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    private fun signGithub(){
+        val pendingResultTask = Firebase.auth.pendingAuthResult
+
+        if (pendingResultTask != null) {
+            pendingResultTask
+                    .addOnSuccessListener {
+                        updateActivity()
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(this, "Somethings went wrong! Code: 1", Toast.LENGTH_SHORT).show()
+                    }
+        } else {
+            Firebase.auth
+                    .startActivityForSignInWithProvider(this, githubProvider.build())
+                    .addOnSuccessListener(
+                            OnSuccessListener<AuthResult?> {
+                                updateActivity()
+                            })
+                    .addOnFailureListener(
+                            OnFailureListener {
+                                Toast.makeText(this, "Somethings went wrong! Code: 2", Toast.LENGTH_SHORT).show()
+                            })
+        }
+    }
+
     private fun signGoogle(){
         googleOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build()
-        googleClient = GoogleSignIn.getClient(this,googleOptions)
+        googleClient = GoogleSignIn.getClient(this, googleOptions)
 
         val signIntent = googleClient.signInIntent
-        startActivityForResult(signIntent,RC_SIGN_IN)
-    }
-
-    private fun signFacebook(){
-        val lm = LoginManager.getInstance()
-
-        lm.logInWithReadPermissions(this, listOf("public_profile", "email"))
-
-        lm.registerCallback(this.callbackManager, object :
-                FacebookCallback<LoginResult> {
-            override fun onSuccess(loginResult: LoginResult) {
-                Log.d("Facebook", "facebook:onSuccess:$loginResult")
-                handleFacebookAccessToken(loginResult.accessToken)
-            }
-
-            override fun onCancel() {
-                Log.d("Facebook", "facebook:onCancel")
-                binding.pbLogin.visibility = GONE
-            }
-
-            override fun onError(error: FacebookException) {
-                Log.d("Facebook", "facebook:onError", error)
-                binding.pbLogin.visibility = GONE
-            }
-
-        })
-    }
-
-    private fun handleFacebookAccessToken(token: AccessToken) {
-        Log.d("Facebook", "handleFacebookAccessToken:$token")
-
-        val credential = FacebookAuthProvider.getCredential(token.token)
-        auth.signInWithCredential(credential)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    updateActivity()
-                } else {
-                    Toast.makeText(this,"Authentication failed!",Toast.LENGTH_SHORT).show()
-                    binding.pbLogin.visibility = GONE
-                }
-            }
+        startActivityForResult(signIntent, RC_SIGN_IN)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
-        callbackManager.onActivityResult(requestCode, resultCode, data)
 
         if(requestCode == RC_SIGN_IN){
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
@@ -139,12 +122,13 @@ class LoginActivity : AppCompatActivity() {
                             if (task.isSuccessful) {
                                 updateActivity()
                             } else {
-                                Toast.makeText(this,task.exception.toString(),Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this, task.exception.toString(), Toast.LENGTH_SHORT).show()
                             }
                         }
-            }catch(e: ApiException){
-                Toast.makeText(this,e.toString(), Toast.LENGTH_SHORT).show()
-                Log.d("GoogleError",e.toString())
+            }catch (e: ApiException){
+                Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show()
+                FirebaseCrashlytics.getInstance().setCustomKey("sign", "Error Google Sign In : ${e.localizedMessage} | ${e.toString()}")
+                Log.d("GoogleError", e.toString())
             }
             binding.pbLogin.visibility = GONE
         }
@@ -161,13 +145,13 @@ class LoginActivity : AppCompatActivity() {
         if(binding.etLoginEmail.text.isNotEmpty() && binding.etLoginPassword.text.isNotEmpty()){
             binding.pbLogin.visibility = VISIBLE
 
-            auth.signInWithEmailAndPassword(binding.etLoginEmail.text.toString(),binding.etLoginPassword.text.toString())
+            auth.signInWithEmailAndPassword(binding.etLoginEmail.text.toString(), binding.etLoginPassword.text.toString())
                     .addOnCompleteListener(this) {
                         if(it.isSuccessful){
                             updateActivity()
                         }
                         else{
-                            Toast.makeText(this,"Authentication failed!",Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, "Authentication failed!", Toast.LENGTH_SHORT).show()
                             binding.pbLogin.visibility = GONE
                         }
                     }
@@ -180,9 +164,6 @@ class LoginActivity : AppCompatActivity() {
         FirebaseInstanceId.getInstance().token?.let {
             phoneToken = it
         }
-
-        DatabaseFun.creating(this,auth.currentUser!!.uid)
-        DatabaseFun.setup("last_messages")
 
         userUID = auth.currentUser?.uid
 
@@ -197,11 +178,11 @@ class LoginActivity : AppCompatActivity() {
         db.collection("detailedprofile").document(auth.currentUser!!.uid).get().addOnSuccessListener {
 
             if(it["name"].toString() == "null"){
-                db.collection("block").document(auth.currentUser!!.uid).collection("from").document("system").set(hashMapOf<String,Any>())
-                db.collection("block").document(auth.currentUser!!.uid).collection("to").document("system").set(hashMapOf<String,Any>())
+                db.collection("block").document(auth.currentUser!!.uid).collection("from").document("system").set(hashMapOf<String, Any>())
+                db.collection("block").document(auth.currentUser!!.uid).collection("to").document("system").set(hashMapOf<String, Any>())
 
                 val userName = auth.currentUser?.displayName
-                val inserting = HashMap<String,String>()
+                val inserting = HashMap<String, String>()
                 inserting["currentPhone"] = phoneToken!!
                 inserting["name"] = userName!!
                 if(auth.currentUser?.photoUrl != null){

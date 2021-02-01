@@ -1,6 +1,7 @@
 package com.yeocak.chatapp.fragments
 
 import android.app.Activity.RESULT_OK
+import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -12,21 +13,25 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.widget.doAfterTextChanged
 import coil.load
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import com.yeocak.chatapp.DatabaseFun
+import com.yeocak.chatapp.ImageConvert
 import com.yeocak.chatapp.LoginData.userUID
 import com.yeocak.chatapp.R
 import com.yeocak.chatapp.activities.MenuActivity
+import com.yeocak.chatapp.activities.MenuActivity.Companion.menuActivity
 import com.yeocak.chatapp.databinding.FragmentSelfProfileBinding
-import java.io.File
+import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.Main
+import java.lang.Exception
 
 class SelfProfileFragment : Fragment() {
 
@@ -36,10 +41,8 @@ class SelfProfileFragment : Fragment() {
 
     private var imageUri: Uri? = null
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    private lateinit var profileInfo : MutableMap<String, String>
+    private var changeList = mutableMapOf<Int,Boolean>()
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -47,45 +50,30 @@ class SelfProfileFragment : Fragment() {
     ): View? {
         binding = FragmentSelfProfileBinding.inflate(layoutInflater)
 
+        db = FirebaseFirestore.getInstance()
+        auth = Firebase.auth.currentUser!!
+
+        profileInfo = DatabaseFun.takeSelfProfile()
+        if(profileInfo["name"].isNullOrEmpty()){
+            firstTimeDatabase()
+        }
+
+        updateProfileFromDatabase()
+        updateProfileFromFirebase()
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        db = FirebaseFirestore.getInstance()
-        auth = Firebase.auth.currentUser!!
 
-        db.collection("detailedprofile").document(auth.uid).get().addOnSuccessListener {
-            binding.etSelfProfileName.setText(auth.displayName)
+        binding.btnSaveChanges.setOnClickListener {
+            checkIsOkay()
+        }
 
-            if (auth.photoUrl.toString() != "null") {
-                binding.ibSelfProfileAvatar.load(auth.photoUrl)
-            }
-
-            if (it.data?.get("desc").toString() != "null") {
-                binding.etSelfProfileExp.setText(it.data?.get("desc").toString())
-            }
-
-            if (it.data?.get("facebook").toString() != "null") {
-                binding.etSelfProfileFacebook.setText(it.data?.get("facebook").toString())
-                binding.cbSelfProfileFacebook.isChecked = true
-            }
-
-            if (it.data?.get("youtube").toString() != "null") {
-                binding.etSelfProfileYoutube.setText(it.data?.get("youtube").toString())
-                binding.cbSelfProfileYoutube.isChecked = true
-            }
-
-            if (it.data?.get("twitter").toString() != "null") {
-                binding.etSelfProfileTwitter.setText(it.data?.get("twitter").toString())
-                binding.cbSelfProfileTwitter.isChecked = true
-            }
-
-            if (it.data?.get("instagram").toString() != "null") {
-                binding.etSelfProfileInstagram.setText(it.data?.get("instagram").toString())
-                binding.cbSelfProfileInstagram.isChecked = true
-            }
+        binding.btnUndoChanges.setOnClickListener {
+            refreshFragment()
         }
 
         binding.ibSelfProfileAvatar.setOnClickListener {
@@ -93,7 +81,135 @@ class SelfProfileFragment : Fragment() {
             startActivityForResult(gallery, 100)
         }
 
-        binding.btnSelfProfileView.setOnClickListener {
+
+        binding.etSelfProfileName.doAfterTextChanged {
+            if(it.toString() != profileInfo["name"]){
+                changes(0,true)
+            }
+            else{
+                changes(0,false)
+            }
+        }
+
+        binding.etSelfProfileExp.doAfterTextChanged {
+            if(it.toString() != profileInfo["intro"]){
+                changes(1,true)
+            }
+            else{
+                changes(1,false)
+            }
+        }
+
+        if(binding.cbSelfProfileYoutube.isChecked){
+            binding.etSelfProfileYoutube.doAfterTextChanged {
+                if(it.toString() != profileInfo["youtube"]){
+                    changes(2,true)
+                }
+                else{
+                    changes(2, false)
+                }
+            }
+        }
+
+        if(binding.cbSelfProfileInstagram.isChecked){
+            binding.etSelfProfileInstagram.doAfterTextChanged {
+                if(it.toString() != profileInfo["instagram"]){
+                    changes(3,true)
+                }
+                else{
+                    changes(3, false)
+                }
+            }
+        }
+
+        if(binding.cbSelfProfileFacebook.isChecked){
+            binding.etSelfProfileFacebook.doAfterTextChanged {
+                if(it.toString() != profileInfo["facebook"]){
+                    changes(4,true)
+                }
+                else{
+                    changes(4, false)
+                }
+            }
+        }
+
+        if(binding.cbSelfProfileTwitter.isChecked){
+            binding.etSelfProfileTwitter.doAfterTextChanged {
+                if(it.toString() != profileInfo["twitter"]){
+                    changes(5,true)
+                }
+                else{
+                    changes(5, false)
+                }
+            }
+        }
+
+        binding.cbSelfProfileYoutube.setOnClickListener {
+            if(binding.cbSelfProfileYoutube.isChecked == (profileInfo["youtube"].toString() == "null")){
+                changes(6,true)
+            }
+            else{
+                changes(6,false)
+            }
+        }
+
+        binding.cbSelfProfileInstagram.setOnClickListener {
+            if(binding.cbSelfProfileInstagram.isChecked == (profileInfo["instagram"].toString() == "null")){
+                changes(7,true)
+            }
+            else{
+                changes(7,false)
+            }
+        }
+
+        binding.cbSelfProfileTwitter.setOnClickListener {
+            if(binding.cbSelfProfileTwitter.isChecked == (profileInfo["twitter"].toString() == "null")){
+                changes(8,true)
+            }
+            else{
+                changes(8,false)
+            }
+        }
+
+        binding.cbSelfProfileFacebook.setOnClickListener {
+            if(binding.cbSelfProfileFacebook.isChecked == (profileInfo["facebook"].toString() == "null")){
+                changes(9,true)
+            }
+            else{
+                changes(9,false)
+            }
+        }
+
+
+        binding.btnRemovePhoto.setOnClickListener {
+
+            val alertBuilder = AlertDialog.Builder(activity as MenuActivity)
+                .apply {
+                    setTitle("Remove profile photo")
+                    setMessage("Do you really want to remove your current profile photo?")
+                    setPositiveButton("Remove"){ _, _ ->
+
+                        val changing = userProfileChangeRequest {
+                            photoUri = Uri.parse("null")
+                        }
+                        auth.updateProfile(changing)
+
+                        db.collection("detailedprofile").document(userUID!!).update(hashMapOf<String, Any>("photo" to "null")).addOnSuccessListener {
+                            db.collection("profile").document(userUID!!).update(hashMapOf<String, Any>("photo" to "null")).addOnSuccessListener {
+                                binding.ibSelfProfileAvatar.load(R.drawable.ic_baseline_person_24)
+                                binding.btnRemovePhoto.visibility = GONE
+                            }
+                        }
+
+
+                    }
+                    setNegativeButton("Cancel"){ _, _ -> }
+                }
+
+            alertBuilder.show()
+        }
+
+        /*binding.btnSelfProfileView.setOnClickListener {
 
             updating()
 
@@ -111,7 +227,192 @@ class SelfProfileFragment : Fragment() {
                 (activity as MenuActivity).supportFragmentManager.beginTransaction()
                         .replace(R.id.frMain, ProfilesFragment()).commit()
             }
+        }*/
+    }
+
+    private fun refreshFragment(){
+        val fm = fragmentManager!!.beginTransaction().replace(R.id.frMain,SelfProfileFragment())
+        fm.commit()
+    }
+
+    private fun firstTimeDatabase(){
+        auth.displayName?.let { DatabaseFun.changeSelfProfile(it) }
+    }
+
+    private fun updateProfileFromFirebase(){
+
+        var intro: String?= null
+        var instagram: String?= null
+        var facebook: String?= null
+        var youtube: String?= null
+        var twitter: String?= null
+
+        var photo: String? = null
+
+        db.collection("detailedprofile").document(userUID!!).get().addOnSuccessListener {
+            GlobalScope.launch {
+
+                var name = auth.displayName!!
+
+                val first = ImageConvert.downloadImageBitmap(auth.photoUrl.toString(), menuActivity!!)
+                val imageString = ImageConvert.getImageString(first)
+
+                photo = imageString
+
+                if(auth.photoUrl.toString() != "null"){
+                    withContext(Main){
+                        binding.btnRemovePhoto.visibility = VISIBLE
+                    }
+                }
+                else{
+                    photo = "null"
+                    binding.ibSelfProfileAvatar.load(R.drawable.ic_baseline_person_24)
+                }
+
+                intro = it.data?.get("desc").toString()
+
+                facebook = it.data?.get("facebook").toString()
+                youtube = it.data?.get("youtube").toString()
+                twitter = it.data?.get("twitter").toString()
+                instagram = it.data?.get("instagram").toString()
+
+                DatabaseFun.changeSelfProfile(name, photo, intro, youtube, instagram, facebook, twitter)
+
+                withContext(Main){
+                    updateProfileFromDatabase()
+                }
+            }
         }
+    }
+
+    private fun updateProfileFromDatabase(){
+
+        profileInfo = DatabaseFun.takeSelfProfile()
+
+        binding.etSelfProfileName.setText(profileInfo["name"])
+
+        if(profileInfo["photo"] != "null" || profileInfo["photo"].isNullOrEmpty()){
+            Log.d("Testing", "1")
+            GlobalScope.launch {
+                try {
+                    val image = ImageConvert.getBitmap(profileInfo["photo"])
+                    binding.ibSelfProfileAvatar.load(image)
+                }catch (e: Exception){
+                    Log.d("Error", "Error In SelfProfileFragment")
+                }
+            }
+        }
+        else{
+            Log.d("Testing", "2")
+            binding.ibSelfProfileAvatar.load(R.drawable.ic_baseline_person_24)
+        }
+
+        if(profileInfo["intro"] != "null"){
+            binding.etSelfProfileExp.setText(profileInfo["intro"])
+        }
+
+        if(profileInfo["youtube"] != "null"){
+            binding.etSelfProfileYoutube.setText(profileInfo["youtube"])
+            binding.cbSelfProfileYoutube.isChecked = true
+        }
+
+        if(profileInfo["facebook"] != "null"){
+            binding.etSelfProfileFacebook.setText(profileInfo["facebook"])
+            binding.cbSelfProfileFacebook.isChecked = true
+        }
+
+        if(profileInfo["twitter"] != "null"){
+            binding.etSelfProfileTwitter.setText(profileInfo["twitter"])
+            binding.cbSelfProfileTwitter.isChecked = true
+        }
+
+        if(profileInfo["instagram"] != "null"){
+            binding.etSelfProfileInstagram.setText(profileInfo["instagram"])
+            binding.cbSelfProfileInstagram.isChecked = true
+        }
+    }
+
+    private fun updateProfile(name: String, intro: String?, youtube: String?, instagram: String?, facebook: String?, twitter: String?) {
+
+        val addingMap = hashMapOf<String, Any>()
+        val easyMap = hashMapOf<String, Any>()
+
+        addingMap["name"] = name
+        easyMap["name"] = name
+
+        addingMap["desc"] = intro.toString()
+
+        addingMap["youtube"] = youtube.toString()
+        addingMap["instagram"] = instagram.toString()
+        addingMap["facebook"] = facebook.toString()
+        addingMap["twitter"] = twitter.toString()
+
+        db.collection("detailedprofile").document(userUID!!).set(addingMap).addOnSuccessListener {
+            db.collection("profile").document(userUID!!).set(easyMap).addOnSuccessListener {
+                DatabaseFun.changeSelfProfile(name,profileInfo["photo"].toString() , intro, youtube, instagram, facebook, twitter)
+                refreshFragment()
+            }
+        }
+
+    }
+
+    private fun changes(index: Int, value: Boolean){
+        changeList[index] = value
+        if(changeList.values.contains(true)){
+            binding.layoutChanges.visibility = VISIBLE
+        }
+        else{
+            binding.layoutChanges.visibility = GONE
+        }
+    }
+
+    private fun checkIsOkay(){
+
+        var name: String?= null
+        var intro: String?= null
+        var instagram: String?= null
+        var facebook: String?= null
+        var youtube: String?= null
+        var twitter: String?= null
+
+        var errorMessage: String? = null
+
+        if(!binding.etSelfProfileName.text.isNullOrEmpty() && binding.etSelfProfileName.text.toString() != "null"){
+            name = binding.etSelfProfileName.text.toString()
+        }
+        else{
+            errorMessage = "You must enter a valid name!"
+        }
+
+        if(binding.etSelfProfileExp.text.toString() != "null"){
+            intro = binding.etSelfProfileExp.text.toString()
+        }
+        else{
+            errorMessage = "You can't write null to your introduction"
+        }
+        if(binding.cbSelfProfileFacebook.isChecked && !binding.etSelfProfileFacebook.text.isNullOrEmpty() && binding.etSelfProfileFacebook.text.toString() != "null"){
+            facebook = binding.etSelfProfileFacebook.text.toString()
+        }
+
+        if(binding.cbSelfProfileTwitter.isChecked && !binding.etSelfProfileTwitter.text.isNullOrEmpty() && binding.etSelfProfileTwitter.text.toString() != "null"){
+            twitter = binding.etSelfProfileTwitter.text.toString()
+        }
+
+        if(binding.cbSelfProfileYoutube.isChecked && !binding.etSelfProfileYoutube.text.isNullOrEmpty() && binding.etSelfProfileYoutube.text.toString() != "null"){
+            youtube = binding.etSelfProfileYoutube.text.toString()
+        }
+
+        if(binding.cbSelfProfileInstagram.isChecked && !binding.etSelfProfileInstagram.text.isNullOrEmpty() && binding.etSelfProfileInstagram.text.toString() != "null"){
+            instagram = binding.etSelfProfileInstagram.text.toString()
+        }
+
+        if (errorMessage == null){
+            updateProfile(name!!,intro, youtube, instagram, facebook, twitter)
+        }
+        else{
+            Toast.makeText((activity as MenuActivity), errorMessage, Toast.LENGTH_SHORT).show()
+        }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -120,90 +421,43 @@ class SelfProfileFragment : Fragment() {
             binding.pbAvatar.visibility = VISIBLE
 
             imageUri = data?.data
-            binding.ibSelfProfileAvatar.load(imageUri)
 
             if (imageUri.toString() != "null") {
-                val addingMap = hashMapOf<String, Any>()
-                val easyMap = hashMapOf<String, Any>()
+                uploadPhoto()
+            }
+        }
+    }
 
-                val ref = Firebase.storage.reference.child("photos/${userUID}.jpg")
+    private fun uploadPhoto() {
+        val ref = Firebase.storage.reference.child("photos/${userUID}.jpg")
 
-                ref.putFile(imageUri!!).addOnSuccessListener {
-                    ref.downloadUrl.addOnSuccessListener { Uring ->
+        ref.putFile(imageUri!!).addOnSuccessListener {
+            ref.downloadUrl.addOnSuccessListener { Uring ->
 
-                        val changing = userProfileChangeRequest {
-                            photoUri = Uring
-                        }
-
-                        auth.updateProfile(changing)
-                                .addOnSuccessListener {
-                                    easyMap.clear()
-                                    addingMap.clear()
-
-                                    easyMap["photo"] = Uring.toString()
-                                    addingMap["photo"] = Uring.toString()
-
-                                    db.collection("detailedprofile").document(auth.uid).update(addingMap)
-                                    db.collection("profile").document(auth.uid).update(easyMap)
-                                }
-
-                    }
-                }.addOnCompleteListener {
-                    binding.pbAvatar.visibility = GONE
+                val changing = userProfileChangeRequest {
+                    photoUri = Uring
                 }
+
+                auth.updateProfile(changing).addOnSuccessListener {
+
+                    val addingMap = hashMapOf<String, Any>()
+                    val easyMap = hashMapOf<String, Any>()
+
+                    addingMap["photo"] = Uring.toString()
+                    easyMap["photo"] = Uring.toString()
+
+                    db.collection("detailedprofile").document(userUID!!).update(addingMap).addOnSuccessListener {
+                        db.collection("profile").document(userUID!!).update(easyMap).addOnSuccessListener {
+
+                        }
+                    }
+                }
+
             }
+        }.addOnCompleteListener {
+            binding.ibSelfProfileAvatar.load(imageUri)
+            binding.pbAvatar.visibility = GONE
         }
     }
 
-    override fun onStop() {
-        super.onStop()
-
-        updating()
-    }
-
-    private fun updating() {
-
-        val addingMap = hashMapOf<String, Any>()
-        val easyMap = hashMapOf<String, Any>()
-
-        addingMap["desc"] = binding.etSelfProfileExp.text.toString()
-
-        if (!binding.etSelfProfileName.text.isNullOrEmpty() && binding.etSelfProfileName.text.toString() != "null") {
-            userProfileChangeRequest {
-                displayName = binding.etSelfProfileName.text.toString()
-            }
-
-            addingMap["name"] = binding.etSelfProfileName.text.toString()
-            easyMap["name"] = binding.etSelfProfileName.text.toString()
-
-        }
-
-        if (!binding.etSelfProfileInstagram.text.isNullOrEmpty() && binding.cbSelfProfileInstagram.isChecked) {
-            addingMap["instagram"] = binding.etSelfProfileInstagram.text.toString()
-        } else {
-            addingMap["instagram"] = "null"
-        }
-
-        if (!binding.etSelfProfileFacebook.text.isNullOrEmpty() && binding.cbSelfProfileFacebook.isChecked) {
-            addingMap["facebook"] = binding.etSelfProfileFacebook.text.toString()
-        } else {
-            addingMap["facebook"] = "null"
-        }
-
-        if (!binding.etSelfProfileTwitter.text.isNullOrEmpty() && binding.cbSelfProfileTwitter.isChecked) {
-            addingMap["twitter"] = binding.etSelfProfileTwitter.text.toString()
-        } else {
-            addingMap["twitter"] = "null"
-        }
-
-        if (!binding.etSelfProfileYoutube.text.isNullOrEmpty() && binding.cbSelfProfileYoutube.isChecked) {
-            addingMap["youtube"] = binding.etSelfProfileYoutube.text.toString()
-        } else {
-            addingMap["youtube"] = "null"
-        }
-
-        db.collection("detailedprofile").document(auth.uid).update(addingMap)
-        db.collection("profile").document(auth.uid).update(easyMap)
-
-    }
 }

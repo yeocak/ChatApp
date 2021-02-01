@@ -32,7 +32,7 @@ class AboutMeFragment : Fragment() {
 
         binding.tvUserId.text = "Your id: " + LoginData.userUID
 
-        binding.btnGithub.setOnClickListener {
+        binding.btnGoGithub.setOnClickListener {
             val githubUrl = "https://github.com/yeocak/ChatApp"
             val intent = Intent(Intent.ACTION_VIEW)
             intent.data = Uri.parse(githubUrl)
