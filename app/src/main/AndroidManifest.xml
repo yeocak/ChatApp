@@ -21,7 +21,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.MessageActivity" />
+        <activity android:name=".activities.MessageActivity"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
         <activity android:name=".activities.ForgotActivity" />
         <activity android:name=".activities.MenuActivity" />
         <activity android:name=".activities.RegisterActivity" />

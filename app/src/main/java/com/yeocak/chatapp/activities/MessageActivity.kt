@@ -1,11 +1,13 @@
 package com.yeocak.chatapp.activities
 
+import android.R.attr
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View.GONE
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.google.firebase.auth.FirebaseUser
@@ -25,10 +27,9 @@ import com.yeocak.chatapp.notification.RetrofitObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.HashMap
+
 
 class MessageActivity : AppCompatActivity() {
 
@@ -55,8 +56,6 @@ class MessageActivity : AppCompatActivity() {
 
         LoginData.inMessages = true
 
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
-
         auth = Firebase.auth.currentUser!! // User auth
         partnerUid = intent.getStringExtra("uid")!! // Partner's uid
         if(!intent.getStringExtra("photo").isNullOrEmpty()){
@@ -67,8 +66,6 @@ class MessageActivity : AppCompatActivity() {
             binding.ivPartnerPhoto.load(R.drawable.ic_baseline_person_24)
         }
 
-
-
         val firestore = FirebaseFirestore.getInstance().collection("profile").document(partnerUid) // Getting profile databases
         firestore.get()
                 .addOnSuccessListener {
@@ -77,17 +74,15 @@ class MessageActivity : AppCompatActivity() {
                     binding.tvPartnerName.text = partnerName
                 }
 
-        Log.d("uid",partnerUid + " |  " + userUID)
-
         val realtimeKey = combineUID(auth.uid, partnerUid) // Getting real time databases and messages
         realtime = Firebase.database("https://chatapp-35faa-default-rtdb.europe-west1.firebasedatabase.app/").getReference("$realtimeKey")
         partnerRealtime = Firebase.database("https://chatapp-35faa-default-rtdb.europe-west1.firebasedatabase.app/").getReference(
-            partnerUid).child(userUID!!)
+                partnerUid).child(userUID!!)
         myRealtime = Firebase.database("https://chatapp-35faa-default-rtdb.europe-west1.firebasedatabase.app/").getReference(
-            userUID!!).child(partnerUid)
+                userUID!!).child(partnerUid)
 
         realtime.child("0").setValue(RealtimeMessage(
-            "System","Connected",auth.uid
+                "System", "Connected", auth.uid
         ))
 
         messageList = mutableListOf()
@@ -95,19 +90,19 @@ class MessageActivity : AppCompatActivity() {
 
         realtime.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val value = dataSnapshot.getValue<List<HashMap<String,String>>>()
+                val value = dataSnapshot.getValue<List<HashMap<String, String>>>()
                 val newList = mutableListOf<SingleMessage>()
-                for(a in value!!.indices){
-                    if(a != 0){
+                for (a in value!!.indices) {
+                    if (a != 0) {
                         val msg = value[a]["message"]
                         var owning = false
 
-                        if(value[a]["fromUID"] == auth.uid){
+                        if (value[a]["fromUID"] == auth.uid) {
                             owning = true
                         }
 
                         newList.add(SingleMessage(
-                            owning,msg!!
+                                owning, msg!!
                         ))
                     }
                 }
@@ -117,7 +112,7 @@ class MessageActivity : AppCompatActivity() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(this@MessageActivity,"Failed to load messages!",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MessageActivity, "Failed to load messages!", Toast.LENGTH_SHORT).show()
             }
         })
 
@@ -142,14 +137,14 @@ class MessageActivity : AppCompatActivity() {
                         }
                         if(!blockList.contains(partnerUid)){
                             sendMessage(RealtimeMessage(
-                                auth.displayName!!,newMessage,auth.uid
+                                    auth.displayName!!, newMessage, auth.uid
                             ))
 
                             sendNotification(
-                                PushNotification(
-                                    NotificationData(auth.displayName!!, newMessage, auth.photoUrl.toString(), auth.uid),
-                                    partnerPhone
-                                )
+                                    PushNotification(
+                                            NotificationData(auth.displayName!!, newMessage, auth.photoUrl.toString(), auth.uid),
+                                            partnerPhone
+                                    )
                             )
 
                             binding.etNewMessage.setText("")
@@ -167,33 +162,41 @@ class MessageActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        binding.rvMessaging.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+            if (bottom < oldBottom) {
+                binding.rvMessaging.smoothScrollToPosition(adapting.itemCount)
+            }
+        }
+
     }
+
+
 
     private fun setRV(){
         adapting = MessagingAdapter(messageList)
 
         binding.rvMessaging.adapter = adapting
         binding.rvMessaging.layoutManager = LinearLayoutManager(this)
-        binding.rvMessaging.scrollToPosition(messageList.size-1)
+        binding.rvMessaging.scrollToPosition(messageList.size - 1)
     }
 
     private fun sendNotification(notification: PushNotification) = CoroutineScope(Dispatchers.IO).launch {
         try {
             val response = RetrofitObject.api.postNotification(notification)
             if(response.isSuccessful) {
-                Log.e("Sending","Sended")
+                Log.e("Sending", "Sended")
             } else {
                 Log.e("Sending", "Error 1 : ${response.errorBody().toString()}")
 
             }
-        } catch(e: Exception) {
+        } catch (e: Exception) {
             Log.e("Sending", "Error 2 : $e")
         }
 
     }
 
     private fun sendMessage(datas: RealtimeMessage){
-        realtime.child((messageList.size+1).toString()).setValue(datas)
+        realtime.child((messageList.size + 1).toString()).setValue(datas)
     }
 
     private fun updateRV(list: MutableList<SingleMessage>){
@@ -201,16 +204,16 @@ class MessageActivity : AppCompatActivity() {
         messageList.addAll(list)
 
         adapting.notifyDataSetChanged()
-        binding.rvMessaging.scrollToPosition(messageList.size-1)
+        binding.rvMessaging.scrollToPosition(messageList.size - 1)
 
         if(messageList.isNotEmpty()){
             val dateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
             val todayDate = dateFormat.format(Date()).toString()
 
-            partnerRealtime.child("last").setValue(messageList[messageList.size-1].message)
+            partnerRealtime.child("last").setValue(messageList[messageList.size - 1].message)
             partnerRealtime.child("date").setValue(todayDate)
 
-            myRealtime.child("last").setValue(messageList[messageList.size-1].message)
+            myRealtime.child("last").setValue(messageList[messageList.size - 1].message)
             myRealtime.child("date").setValue(todayDate)
         }
     }
