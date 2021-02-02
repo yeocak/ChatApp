@@ -42,7 +42,7 @@ TODO List:
   - Chat tab with keyboard slide
   - App icon
   - Google login bug fix
-  - Facebook token
+  - ~~Github Login~~
   - Message groups
   - Photo and voice records
   - Resize photos
