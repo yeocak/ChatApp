@@ -22,7 +22,7 @@ import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import com.yeocak.chatapp.DatabaseFun
+import com.yeocak.chatapp.database.DatabaseFun
 import com.yeocak.chatapp.ImageConvert
 import com.yeocak.chatapp.LoginData.userUID
 import com.yeocak.chatapp.R
@@ -209,25 +209,6 @@ class SelfProfileFragment : Fragment() {
             alertBuilder.show()
         }
 
-        /*binding.btnSelfProfileView.setOnClickListener {
-
-            updating()
-
-            FirebaseFirestore.getInstance().collection("detailedprofile").document(auth.uid).get().addOnSuccessListener {
-
-                CommunityAdapter.transferprofileName = it.data?.get("name").toString()
-                CommunityAdapter.transferprofileDesc = it.data?.get("desc").toString()
-                CommunityAdapter.transferprofileAvatar = it.data?.get("photo").toString()
-                CommunityAdapter.transferprofileFacebook = it.data?.get("facebook").toString()
-                CommunityAdapter.transferprofileTwitter = it.data?.get("twitter").toString()
-                CommunityAdapter.transferprofileInstagram = it.data?.get("instagram").toString()
-                CommunityAdapter.transferprofileYoutube = it.data?.get("youtube").toString()
-                CommunityAdapter.transferprofileUid = auth.uid
-
-                (activity as MenuActivity).supportFragmentManager.beginTransaction()
-                        .replace(R.id.frMain, ProfilesFragment()).commit()
-            }
-        }*/
     }
 
     private fun refreshFragment(){
@@ -292,7 +273,6 @@ class SelfProfileFragment : Fragment() {
         binding.etSelfProfileName.setText(profileInfo["name"])
 
         if(profileInfo["photo"] != "null" || profileInfo["photo"].isNullOrEmpty()){
-            Log.d("Testing", "1")
             GlobalScope.launch {
                 try {
                     val image = ImageConvert.getBitmap(profileInfo["photo"])
@@ -303,7 +283,6 @@ class SelfProfileFragment : Fragment() {
             }
         }
         else{
-            Log.d("Testing", "2")
             binding.ibSelfProfileAvatar.load(R.drawable.ic_baseline_person_24)
         }
 

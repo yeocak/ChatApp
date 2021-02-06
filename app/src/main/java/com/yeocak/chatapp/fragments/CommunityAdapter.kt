@@ -44,19 +44,11 @@ class CommunityAdapter(
 
 
             binding.layoutCommunity.setOnClickListener {
-                FirebaseFirestore.getInstance().collection("detailedprofile").document(current.uid).get().addOnSuccessListener {
+                    transferprofileUid = current.uid
 
-                    transferprofileName = it.data?.get("name").toString()
-                    transferprofileDesc= it.data?.get("desc").toString()
-                    transferprofileAvatar= it.data?.get("photo").toString()
-                    transferprofileFacebook= it.data?.get("facebook").toString()
-                    transferprofileTwitter= it.data?.get("twitter").toString()
-                    transferprofileInstagram= it.data?.get("instagram").toString()
-                    transferprofileYoutube= it.data?.get("youtube").toString()
-                    transferprofileUid= current.uid
-
-                    fm.beginTransaction().replace(R.id.frMain, ProfilesFragment()).commit()
-                }
+                    fm.beginTransaction()
+                            .replace(R.id.frMain, ProfilesFragment())
+                            .commit()
             }
         }
     }
@@ -64,13 +56,6 @@ class CommunityAdapter(
     companion object{
         // Transfer data between fragments
 
-        var transferprofileName: String? = null
-        var transferprofileDesc: String? = null
-        var transferprofileAvatar: String? = null
-        var transferprofileFacebook: String? = null
-        var transferprofileTwitter: String? = null
-        var transferprofileInstagram: String? = null
-        var transferprofileYoutube: String? = null
         var transferprofileUid: String? = null
     }
 

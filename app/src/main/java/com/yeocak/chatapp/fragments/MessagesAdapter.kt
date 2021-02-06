@@ -10,17 +10,20 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreSettings
-import com.google.firebase.firestore.Source
-import com.google.firebase.ktx.Firebase
 import com.yeocak.chatapp.ImageConvert
 import com.yeocak.chatapp.R
 import com.yeocak.chatapp.SingleMessages
 import com.yeocak.chatapp.activities.MessageActivity
+import com.yeocak.chatapp.database.DatabaseFun
+import com.yeocak.chatapp.database.DatabaseFun.getProfile
+import com.yeocak.chatapp.database.LastMessage
+import com.yeocak.chatapp.database.Photo
+import com.yeocak.chatapp.database.Profile
 import com.yeocak.chatapp.databinding.SingleMessagesMenuBinding
+import kotlinx.coroutines.*
 
 class MessagesAdapter(
-        private val messagesList: MutableList<SingleMessages>, private val context: Context
+        private val messagesList: MutableList<LastMessage>, private val context: Context
 ) : RecyclerView.Adapter<MessagesAdapter.MessagesViewHolder>() {
 
     class MessagesViewHolder(view: View) : RecyclerView.ViewHolder(view){
@@ -43,25 +46,74 @@ class MessagesAdapter(
     override fun onBindViewHolder(holder: MessagesViewHolder, position: Int) {
         val current = messagesList[position]
 
-        val photo = ImageConvert.getBitmap(current.photo)
-        Log.d("img", "Ops: $photo")
+        val fsdb = FirebaseFirestore.getInstance().collection("detailedprofile").document(current.uid)
 
         with(holder){
 
-            binding.tvPersonName.text = current.name
-            binding.tvPersonMessage.text = current.lastMessage
-            if(photo.toString() != "null"){
-                binding.ivPersonPhoto.load(photo)
-            }
-            else{
-                binding.ivPersonPhoto.load(R.drawable.ic_baseline_person_24)
+            var prof: Profile? = null
+
+            GlobalScope.launch {
+                val result = current.uid.getProfile(context)
+
+                if(result == "download"){
+                    fsdb.get().addOnSuccessListener { data ->
+                        val newProf = Profile(
+                                current.uid,
+                                data["name"].toString(),
+                                data["intro"].toString(),
+                                data["facebook"].toString(),
+                                data["youtube"].toString(),
+                                data["twitter"].toString(),
+                                data["instagram"].toString(),
+                                data["version"].toString()
+                        )
+
+                        DatabaseFun.addProfile(newProf)
+
+                        MainScope().launch {
+                            val bitmap = ImageConvert.downloadImageBitmap(data["photo"].toString(),context)
+                            val string = ImageConvert.getImageString(bitmap)
+
+                            if(string != null){
+                                DatabaseFun.addPhoto(Photo(
+                                        current.uid,
+                                        string
+                                ))
+                            }
+
+                            delay(1000)
+
+                            val takePhoto = DatabaseFun.takePhoto(current.uid)
+                            if(takePhoto != null){
+                                if(takePhoto.photo.isNotEmpty()){
+                                    val photo = ImageConvert.getBitmap(takePhoto.photo)
+                                    binding.ivPersonPhoto.load(photo)
+                                }
+                            }
+                        }
+                        prof = DatabaseFun.takeProfile(current.uid)
+                        binding.tvPersonName.text = prof!!.name
+                    }
+                }
+                else if(result == "nothing"){
+                    prof = DatabaseFun.takeProfile(current.uid)
+                    binding.tvPersonName.text = prof!!.name
+
+                    val takePhoto = DatabaseFun.takePhoto(current.uid)
+                    if(takePhoto != null){
+                        if(takePhoto.photo.isNotEmpty()){
+                            val photo = ImageConvert.getBitmap(takePhoto.photo)
+                            binding.ivPersonPhoto.load(photo)
+                        }
+                    }
+                }
             }
 
+            binding.tvPersonMessage.text = current.message
 
             binding.layoutBlock.setOnClickListener {
                 val intent = Intent(context, MessageActivity::class.java)
                 intent.putExtra("uid",current.uid)
-                intent.putExtra("photo",current.photo)
                 context.startActivity(intent)
             }
         }

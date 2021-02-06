@@ -3,18 +3,13 @@ package com.yeocak.chatapp.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
-import com.yeocak.chatapp.DatabaseFun
-import com.yeocak.chatapp.LoginData
 import com.yeocak.chatapp.R
 import com.yeocak.chatapp.databinding.ActivityRegisterBinding
 

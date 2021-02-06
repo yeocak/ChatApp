@@ -18,6 +18,9 @@ import com.yeocak.chatapp.*
 import com.yeocak.chatapp.LoginData.userUID
 import com.yeocak.chatapp.activities.MenuActivity
 import com.yeocak.chatapp.activities.MenuActivity.Companion.menuActivity
+import com.yeocak.chatapp.database.DatabaseFun
+import com.yeocak.chatapp.database.LastMessage
+import com.yeocak.chatapp.database.Message
 import com.yeocak.chatapp.databinding.FragmentMessagesBinding
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.Main
@@ -26,14 +29,13 @@ class MessagesFragment : Fragment() {
 
     private lateinit var binding: FragmentMessagesBinding
     private lateinit var adapting: MessagesAdapter
-    private lateinit var messages : MutableList<SingleMessages>
+    private lateinit var messages : MutableList<LastMessage>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         binding = FragmentMessagesBinding.inflate(layoutInflater)
 
-        messages = DatabaseFun.takeLastMessages("last_messages")
-        messages.sortByDescending { it.date }
+        messages = DatabaseFun.takeLasts()
 
         adapting = MessagesAdapter(messages, (activity as MenuActivity))
 
@@ -41,39 +43,20 @@ class MessagesFragment : Fragment() {
         binding.rvMessages.layoutManager = LinearLayoutManager((activity as MenuActivity))
 
 
-        val realtime = Firebase.database("https://chatapp-35faa-default-rtdb.europe-west1.firebasedatabase.app/").getReference(userUID!!)
+        val rtdb = Firebase.database("https://chatapp-35faa-default-rtdb.europe-west1.firebasedatabase.app/").getReference("last_message")
+                .child(userUID!!)
 
-        val db = FirebaseFirestore.getInstance()
-
-
-        realtime.addValueEventListener(object : ValueEventListener {
+        rtdb.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                for (a in dataSnapshot.children){
-
-                    db.collection("profile").document(a.key!!).get(Source.SERVER).addOnSuccessListener {
-
-                        GlobalScope.launch {
-
-                                val photoBits = ImageConvert.downloadImageBitmap(it["photo"].toString(), menuActivity!!)
-                                val photoString = ImageConvert.getImageString(photoBits)
-
-                                DatabaseFun.addLastMessage("last_messages",
-                                    a.key!!,
-                                    a.child("last").value.toString(),
-                                    it["name"].toString(),
-                                    photoString,
-                                    a.child("date").value.toString())
-
-                            withContext(Main){
-                                updateRV(DatabaseFun.takeLastMessages("last_messages"))
-                            }
-
-                            delay(1000)
-                        }
-
+                    for(i in dataSnapshot.children){
+                        DatabaseFun.addLast(LastMessage(
+                                i.key!!,
+                                i.child("message").value.toString(),
+                                i.child("date").value.toString()
+                        ))
                     }
-                }
 
+                updateRV(DatabaseFun.takeLasts())
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -81,10 +64,11 @@ class MessagesFragment : Fragment() {
             }
         })
 
+
         return binding.root
     }
 
-    private fun updateRV(list: MutableList<SingleMessages>){
+    private fun updateRV(list: MutableList<LastMessage>){
         messages.clear()
         messages.addAll(list)
         messages.sortByDescending { it.date }

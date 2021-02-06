@@ -82,6 +82,7 @@ class LoginActivity : AppCompatActivity() {
                     }
                     .addOnFailureListener {
                         Toast.makeText(this, "Somethings went wrong! Code: 1", Toast.LENGTH_SHORT).show()
+                        binding.pbLogin.visibility = GONE
                     }
         } else {
             Firebase.auth
@@ -93,6 +94,7 @@ class LoginActivity : AppCompatActivity() {
                     .addOnFailureListener(
                             OnFailureListener {
                                 Toast.makeText(this, "Somethings went wrong! Code: 2", Toast.LENGTH_SHORT).show()
+                                binding.pbLogin.visibility = GONE
                             })
         }
     }
@@ -193,6 +195,7 @@ class LoginActivity : AppCompatActivity() {
 
                     inserting.clear()
                     inserting["name"] = auth.currentUser?.displayName.toString()
+                    inserting["version"] = "0"
                     if(auth.currentUser?.photoUrl != null){
                         inserting["photo"] = auth.currentUser?.photoUrl.toString()
                     }
@@ -215,6 +218,8 @@ class LoginActivity : AppCompatActivity() {
 
         }.addOnFailureListener {
             if(auth.currentUser!=null){
+                auth.signOut()
+                Toast.makeText(this,"Something went wrong!",Toast.LENGTH_SHORT).show()
                 val intent = Intent(this, WelcomeActivity::class.java)
                 startActivity(intent)
                 binding.pbLogin.visibility = GONE

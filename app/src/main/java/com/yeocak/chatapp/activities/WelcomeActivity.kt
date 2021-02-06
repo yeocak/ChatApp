@@ -3,11 +3,9 @@ package com.yeocak.chatapp.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.ktx.Firebase
-import com.yeocak.chatapp.DatabaseFun
 import com.yeocak.chatapp.LoginData
 import com.yeocak.chatapp.databinding.ActivityWelcomeBinding
 

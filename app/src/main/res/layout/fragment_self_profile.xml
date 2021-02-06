@@ -309,17 +309,6 @@
                     </LinearLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnSelfProfileView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="#6E505C"
-                    android:text="View as specific person"
-                    android:textAllCaps="false"
-                    android:textColor="@color/customWhite"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/guideline13" />
-
                 <androidx.appcompat.widget.AppCompatMultiAutoCompleteTextView
                     android:id="@+id/etSelfProfileExp"
                     android:layout_width="wrap_content"
@@ -331,7 +320,7 @@
                     app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/btnSelfProfileView" />
+                    app:layout_constraintTop_toTopOf="@+id/guideline13" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

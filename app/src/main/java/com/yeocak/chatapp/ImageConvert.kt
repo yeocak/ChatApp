@@ -24,7 +24,7 @@ object ImageConvert {
     }
 
     fun getBitmap(image: String?): Bitmap? {
-        val decodedByteArray: ByteArray = Base64.decode(image, Base64.NO_WRAP)
+        val decodedByteArray: ByteArray = Base64.decode(image, Base64.DEFAULT)
         return BitmapFactory.decodeByteArray(decodedByteArray, 0, decodedByteArray.size)
     }
 
@@ -42,14 +42,24 @@ object ImageConvert {
 
 
             context.imageLoader.execute(request)
+
+            if(bitmapNow != null){
+                return Bitmap.createScaledBitmap(
+                        bitmapNow!!,
+                        100,
+                        100,
+                        false
+                )
+            }
+
         }catch (e: Exception){
             FirebaseCrashlytics.getInstance().setCustomKey("imageDownload", "Error Image Converting : ${e.localizedMessage}")
+
         }
 
-
-        Log.d("Image","Converted $bitmapNow")
-
         return bitmapNow
+
+
     }
 
 }

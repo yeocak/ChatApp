@@ -2,15 +2,17 @@ package com.yeocak.chatapp.activities
 
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.yeocak.chatapp.LoginData.userUID
 import com.yeocak.chatapp.R
-import com.yeocak.chatapp.SingleMessage
+import com.yeocak.chatapp.database.Message
 import com.yeocak.chatapp.databinding.SingleMessageBinding
 
 class MessagingAdapter(
-    private val messageList : MutableList<SingleMessage>
+    private val messageList : MutableList<Message>
 ) : RecyclerView.Adapter<MessagingAdapter.MessagingViewHolder>() {
 
     class MessagingViewHolder(view: View) : RecyclerView.ViewHolder(view){
@@ -36,10 +38,12 @@ class MessagingAdapter(
         holder.binding.apply {
             if(current.isOwner){
                 tvSelfMessage.visibility = VISIBLE
+                tvPartnerMessage.visibility = GONE
                 tvSelfMessage.text = current.message
             }
             else{
                 tvPartnerMessage.visibility = VISIBLE
+                tvSelfMessage.visibility = GONE
                 tvPartnerMessage.text = current.message
             }
         }

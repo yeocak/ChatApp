@@ -1,11 +1,8 @@
 package com.yeocak.chatapp.activities
 
-import android.R.attr
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View.GONE
-import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,20 +11,22 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
-import com.google.firebase.database.ktx.getValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.yeocak.chatapp.*
 import com.yeocak.chatapp.LoginData.userUID
-import com.yeocak.chatapp.R
+import com.yeocak.chatapp.database.DatabaseFun
+import com.yeocak.chatapp.database.DatabaseFun.getProfile
+import com.yeocak.chatapp.database.Message
+import com.yeocak.chatapp.database.Profile
 import com.yeocak.chatapp.databinding.ActivityMessageBinding
 import com.yeocak.chatapp.notification.NotificationData
 import com.yeocak.chatapp.notification.PushNotification
 import com.yeocak.chatapp.notification.RetrofitObject
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 
@@ -35,17 +34,16 @@ class MessageActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMessageBinding
     private lateinit var adapting : MessagingAdapter
-    private lateinit var messageList : MutableList<SingleMessage>
+    private lateinit var messageList : MutableList<Message>
     private lateinit var auth : FirebaseUser
 
-    private lateinit var partnerName : String
+    private var partnerProfile: Profile? = null
+
     private lateinit var partnerPhone : String
 
     private lateinit var partnerUid: String
 
-    private lateinit var realtime : DatabaseReference
-    private lateinit var partnerRealtime : DatabaseReference
-    private lateinit var myRealtime: DatabaseReference
+    private lateinit var rtdb : DatabaseReference
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,67 +56,64 @@ class MessageActivity : AppCompatActivity() {
 
         auth = Firebase.auth.currentUser!! // User auth
         partnerUid = intent.getStringExtra("uid")!! // Partner's uid
-        if(!intent.getStringExtra("photo").isNullOrEmpty()){
-            val partnerPhoto = ImageConvert.getBitmap(intent.getStringExtra("photo"))
-            binding.ivPartnerPhoto.load(partnerPhoto)
-        }
-        else{
-            binding.ivPartnerPhoto.load(R.drawable.ic_baseline_person_24)
-        }
 
-        val firestore = FirebaseFirestore.getInstance().collection("profile").document(partnerUid) // Getting profile databases
-        firestore.get()
-                .addOnSuccessListener {
-                    partnerName = it["name"].toString()
-                    partnerPhone = it["currentPhone"].toString()
-                    binding.tvPartnerName.text = partnerName
-                }
-
-        val realtimeKey = combineUID(auth.uid, partnerUid) // Getting real time databases and messages
-        realtime = Firebase.database("https://chatapp-35faa-default-rtdb.europe-west1.firebasedatabase.app/").getReference("$realtimeKey")
-        partnerRealtime = Firebase.database("https://chatapp-35faa-default-rtdb.europe-west1.firebasedatabase.app/").getReference(
-                partnerUid).child(userUID!!)
-        myRealtime = Firebase.database("https://chatapp-35faa-default-rtdb.europe-west1.firebasedatabase.app/").getReference(
-                userUID!!).child(partnerUid)
-
-        realtime.child("0").setValue(RealtimeMessage(
-                "System", "Connected", auth.uid
-        ))
-
-        messageList = mutableListOf()
         setRV()
 
-        realtime.addValueEventListener(object : ValueEventListener {
+        MainScope().launch {
+            partnerProfile = DatabaseFun.takeProfile(partnerUid)
+            binding.tvPartnerName.text = partnerProfile?.name
+
+            val takePhoto = DatabaseFun.takePhoto(partnerUid)
+            if(takePhoto != null){
+                if(takePhoto.photo.isNotEmpty()){
+                    val photo = ImageConvert.getBitmap(takePhoto.photo)
+                    binding.ivPartnerPhoto.load(photo)
+                }
+            }
+        }
+
+        rtdb = Firebase.database("https://chatapp-35faa-default-rtdb.europe-west1.firebasedatabase.app/").getReference("person_message")
+                .child(userUID!!).child(partnerUid)
+
+        rtdb.child("System").setValue("true")
+
+        val takedList = mutableListOf<String>()
+
+        rtdb.orderByChild("date").addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val value = dataSnapshot.getValue<List<HashMap<String, String>>>()
-                val newList = mutableListOf<SingleMessage>()
-                for (a in value!!.indices) {
-                    if (a != 0) {
-                        val msg = value[a]["message"]
-                        var owning = false
-
-                        if (value[a]["fromUID"] == auth.uid) {
-                            owning = true
+                for (a in dataSnapshot.children) {
+                    if (a.key!! != "System" && a.child("fromId").value.toString() == "Done" && !takedList.contains(a.key!!)) {
+                        val newMessage = Message(
+                                a.key!!,
+                                partnerUid,
+                                a.child("message").value.toString(),
+                                a.child("photo").value.toString(),
+                                a.child("date").value.toString(),
+                                false
+                        )
+                        takedList.add(a.key!!)
+                        DatabaseFun.addMessage(newMessage).also {
+                            rtdb.child(a.key!!).apply {
+                                child("fromId").removeValue()
+                                child("date").removeValue()
+                                child("message").removeValue()
+                                child("photo").removeValue()
+                            }
                         }
-
-                        newList.add(SingleMessage(
-                                owning, msg!!
-                        ))
                     }
                 }
 
-                updateRV(newList)
-
+                updateRV(DatabaseFun.takeMessage(partnerUid))
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(this@MessageActivity, "Failed to load messages!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MessageActivity,"Failed to load new messages!", Toast.LENGTH_SHORT).show()
             }
         })
 
         binding.btnSendMessage.setOnClickListener {
             if(binding.etNewMessage.text.isNotEmpty()){
-                val newMessage = binding.etNewMessage.text.toString()
+                val messageText = binding.etNewMessage.text.toString()
 
                 val blockList = mutableSetOf<String>()
                 val fdb = FirebaseFirestore.getInstance()
@@ -136,21 +131,24 @@ class MessageActivity : AppCompatActivity() {
                             }
                         }
                         if(!blockList.contains(partnerUid)){
-                            sendMessage(RealtimeMessage(
-                                    auth.displayName!!, newMessage, auth.uid
-                            ))
+                            val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
+                            val currentDate = sdf.format(Date())
 
-                            sendNotification(
-                                    PushNotification(
-                                            NotificationData(auth.displayName!!, newMessage, auth.photoUrl.toString(), auth.uid),
-                                            partnerPhone
-                                    )
-                            )
+                            val uniqNumb = UUID.randomUUID()
+
+                            sendMessage(Message(
+                                    uniqNumb.toString(),
+                                    partnerUid,
+                                    messageText,
+                                    null,
+                                    currentDate,
+                                    true
+                            ))
 
                             binding.etNewMessage.setText("")
                         }
                         else{
-                            Toast.makeText(this, "You can't message to this user anymore!", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, "You can't Message to this user anymore!", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
@@ -167,12 +165,11 @@ class MessageActivity : AppCompatActivity() {
                 binding.rvMessaging.smoothScrollToPosition(adapting.itemCount)
             }
         }
-
     }
 
-
-
     private fun setRV(){
+        messageList = DatabaseFun.takeMessage(partnerUid)
+
         adapting = MessagingAdapter(messageList)
 
         binding.rvMessaging.adapter = adapting
@@ -195,41 +192,54 @@ class MessageActivity : AppCompatActivity() {
 
     }
 
-    private fun sendMessage(datas: RealtimeMessage){
-        realtime.child((messageList.size + 1).toString()).setValue(datas)
+    private fun sendMessage(datas: Message){
+        val partnerInbox = Firebase.database("https://chatapp-35faa-default-rtdb.europe-west1.firebasedatabase.app/").getReference("person_message")
+                .child(partnerUid).child(userUID!!)
+
+        val lastPartner = Firebase.database("https://chatapp-35faa-default-rtdb.europe-west1.firebasedatabase.app/").getReference("last_message")
+                .child(partnerUid).child(userUID!!)
+        val lastUser = Firebase.database("https://chatapp-35faa-default-rtdb.europe-west1.firebasedatabase.app/").getReference("last_message")
+                .child(userUID!!).child(partnerUid)
+
+        val maping = hashMapOf(
+                "fromId" to datas.fromId,
+                "message" to datas.message,
+                "photo" to datas.photo,
+                "date" to datas.date
+        )
+
+        partnerInbox.child(datas.uniq).setValue(maping).addOnSuccessListener {
+            partnerInbox.child(datas.uniq).child("fromId").setValue("Done").addOnSuccessListener {
+                lastPartner.child("message").setValue(datas.message)
+                lastPartner.child("date").setValue(datas.date)
+
+                lastUser.child("message").setValue(datas.message)
+                lastUser.child("date").setValue(datas.date)
+
+                DatabaseFun.addMessage(datas)
+                updateRV(DatabaseFun.takeMessage(partnerUid))
+            }
+        }
+
+        FirebaseFirestore.getInstance().collection("profile").document(partnerUid).get().addOnSuccessListener {
+            sendNotification(
+                    PushNotification(
+                            NotificationData(auth.displayName!!, datas.message, auth.photoUrl.toString(), userUID!!),
+                            it["phone"].toString()
+                    )
+            )
+        }
+
     }
 
-    private fun updateRV(list: MutableList<SingleMessage>){
+    private fun updateRV(list: MutableList<Message>){
         messageList.clear()
         messageList.addAll(list)
 
         adapting.notifyDataSetChanged()
         binding.rvMessaging.scrollToPosition(messageList.size - 1)
-
-        if(messageList.isNotEmpty()){
-            val dateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
-            val todayDate = dateFormat.format(Date()).toString()
-
-            partnerRealtime.child("last").setValue(messageList[messageList.size - 1].message)
-            partnerRealtime.child("date").setValue(todayDate)
-
-            myRealtime.child("last").setValue(messageList[messageList.size - 1].message)
-            myRealtime.child("date").setValue(todayDate)
-        }
     }
 
-    private fun combineUID(first: String, second: String): String?{
-
-        for(a in first.indices){
-            if(first[a].toInt() > second[a].toInt()){
-                return (first+second)
-            }
-            else if(first[a].toInt() < second[a].toInt()){
-                return (second+first)
-            }
-        }
-        return (first+second)
-    }
 
     override fun onStop() {
         super.onStop()

@@ -49,8 +49,6 @@ class CommunityFragment : Fragment() {
             GlobalScope.launch{
                 Fdb.collection("profile").get().addOnSuccessListener { allUsers ->
 
-                    Log.d("Heyt","Worked1")
-
                     Fdb.collection("block").document(userUID!!).collection("from").get().addOnSuccessListener { from ->
                         Fdb.collection("block").document(userUID!!).collection("to").get().addOnSuccessListener { to ->
                             for(a in from){

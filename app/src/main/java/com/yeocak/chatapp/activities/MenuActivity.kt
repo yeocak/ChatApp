@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.DisplayMetrics
-import com.yeocak.chatapp.DatabaseFun
+import com.yeocak.chatapp.database.DatabaseFun
 import com.yeocak.chatapp.LoginData.userUID
 import com.yeocak.chatapp.R
 import com.yeocak.chatapp.databinding.ActivityMenuBinding
@@ -26,8 +26,11 @@ class MenuActivity : AppCompatActivity() {
         menuActivity = this
 
         DatabaseFun.creating(this, userUID!!)
-        DatabaseFun.setupLast("last_messages")
         DatabaseFun.setupSelfProfile()
+        DatabaseFun.setupMessage()
+        DatabaseFun.setupProfile()
+        DatabaseFun.setupLast()
+        DatabaseFun.setupPhoto()
 
         val displayMetrics = DisplayMetrics()
         windowManager?.defaultDisplay!!.getRealMetrics(displayMetrics)

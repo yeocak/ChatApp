@@ -3,7 +3,6 @@ package com.yeocak.chatapp.fragments
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,29 +12,26 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import coil.load
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
-import com.yeocak.chatapp.DatabaseFun
+import com.yeocak.chatapp.ImageConvert
 import com.yeocak.chatapp.LoginData.userUID
 import com.yeocak.chatapp.R
 import com.yeocak.chatapp.activities.MenuActivity
 import com.yeocak.chatapp.activities.MessageActivity
+import com.yeocak.chatapp.database.DatabaseFun
+import com.yeocak.chatapp.database.DatabaseFun.getProfile
+import com.yeocak.chatapp.database.Photo
+import com.yeocak.chatapp.database.Profile
 import com.yeocak.chatapp.databinding.FragmentProfilesBinding
-import com.yeocak.chatapp.fragments.CommunityAdapter.Companion.transferprofileAvatar
-import com.yeocak.chatapp.fragments.CommunityAdapter.Companion.transferprofileDesc
-import com.yeocak.chatapp.fragments.CommunityAdapter.Companion.transferprofileFacebook
-import com.yeocak.chatapp.fragments.CommunityAdapter.Companion.transferprofileInstagram
-import com.yeocak.chatapp.fragments.CommunityAdapter.Companion.transferprofileName
-import com.yeocak.chatapp.fragments.CommunityAdapter.Companion.transferprofileTwitter
 import com.yeocak.chatapp.fragments.CommunityAdapter.Companion.transferprofileUid
-import com.yeocak.chatapp.fragments.CommunityAdapter.Companion.transferprofileYoutube
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class ProfilesFragment : Fragment() {
 
     private lateinit var binding : FragmentProfilesBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -48,28 +44,36 @@ class ProfilesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.tvProfileName.text = transferprofileName
-        if(transferprofileDesc != "null") {
-            binding.tvProfileExp.text = transferprofileDesc
-        }
-        if(transferprofileAvatar != "null"){
-            binding.ivProfileAvatar.load(transferprofileAvatar)
-        }
-        if(transferprofileFacebook != "null"){
-            binding.layoutProfileFacebook.visibility = VISIBLE
-            binding.tvProfileFacebook.text = transferprofileFacebook
-        }
-        if(transferprofileTwitter != "null"){
-            binding.layoutProfileTwitter.visibility = VISIBLE
-            binding.tvProfileTwitter.text = transferprofileTwitter
-        }
-        if(transferprofileYoutube != "null"){
-            binding.layoutProfileYoutube.visibility = VISIBLE
-            binding.tvProfileYoutube.text = transferprofileYoutube
-        }
-        if(transferprofileInstagram != "null"){
-            binding.layoutProfileInstagram.visibility = VISIBLE
-            binding.tvProfileInstagram.text = transferprofileInstagram
+        val fsdb = FirebaseFirestore.getInstance().collection("detailedprofile").document(transferprofileUid!!)
+
+        GlobalScope.launch {
+            fsdb.get().addOnSuccessListener { data ->
+                val newProf = Profile(
+                        transferprofileUid!!,
+                        data["name"].toString(),
+                        data["intro"].toString(),
+                        data["facebook"].toString(),
+                        data["youtube"].toString(),
+                        data["twitter"].toString(),
+                        data["instagram"].toString(),
+                        data["version"].toString()
+                )
+
+                DatabaseFun.addProfile(newProf)
+
+                MainScope().launch {
+                    val bitmap = ImageConvert.downloadImageBitmap(data["photo"].toString(),(activity as MenuActivity))
+                    val string = ImageConvert.getImageString(bitmap)
+
+                    if(string != null){
+                        DatabaseFun.addPhoto(Photo(
+                                transferprofileUid!!,
+                                string
+                        ))
+                    }
+                    setProfile(data["photo"].toString())
+                }
+            }
         }
 
         binding.btnBlockUser.isVisible = (userUID != transferprofileUid)
@@ -116,5 +120,33 @@ class ProfilesFragment : Fragment() {
 
         }
 
+    }
+
+    private fun setProfile(imageUrl: String){
+        val prof = DatabaseFun.takeProfile(transferprofileUid!!)!!
+        binding.tvProfileName.text = prof.name
+        if(prof.intro != "null"){
+            binding.tvProfileExp.text = prof.intro
+        }
+        if(prof.instagram != "null"){
+            binding.tvProfileInstagram.text = prof.instagram
+            binding.layoutProfileInstagram.visibility = VISIBLE
+        }
+        if(prof.youtube != "null"){
+            binding.tvProfileYoutube.text = prof.youtube
+            binding.layoutProfileYoutube.visibility = VISIBLE
+        }
+        if(prof.facebook != "null"){
+            binding.tvProfileFacebook.text = prof.facebook
+            binding.layoutProfileFacebook.visibility = VISIBLE
+        }
+        if(prof.twitter != "null"){
+            binding.tvProfileTwitter.text = prof.twitter
+            binding.layoutProfileTwitter.visibility = VISIBLE
+        }
+
+        if(imageUrl != "null"){
+            binding.ivProfileAvatar.load(imageUrl)
+        }
     }
 }
