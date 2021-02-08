@@ -1,13 +1,19 @@
 package com.yeocak.chatapp.activities
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.widget.RelativeLayout
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
+import com.yeocak.chatapp.ImageConvert
 import com.yeocak.chatapp.LoginData.userUID
 import com.yeocak.chatapp.R
+import com.yeocak.chatapp.database.DatabaseFun
 import com.yeocak.chatapp.database.Message
 import com.yeocak.chatapp.databinding.SingleMessageBinding
 
@@ -37,14 +43,52 @@ class MessagingAdapter(
 
         holder.binding.apply {
             if(current.isOwner){
-                tvSelfMessage.visibility = VISIBLE
-                tvPartnerMessage.visibility = GONE
+                layoutOwner.visibility = VISIBLE
+                layoutPartning.visibility = GONE
                 tvSelfMessage.text = current.message
+
+                try {
+                    if(current.photo.toString() != "null"){
+
+                        val photoString = DatabaseFun.takePhoto(current.photo.toString())?.photo
+
+                        if(photoString.toString() != "null"){
+                            val photoBit = ImageConvert.getBitmap(photoString)
+                            ivMessagePhotoOwner.visibility = VISIBLE
+                            ivMessagePhotoOwner.load(photoBit)
+                        }
+                    }
+                    else{
+                        ivMessagePhotoOwner.visibility = GONE
+                    }
+                }catch (e: Exception){
+                    Log.d("Error Adapter", "Error No: 9386")
+                }
             }
             else{
-                tvPartnerMessage.visibility = VISIBLE
-                tvSelfMessage.visibility = GONE
+                layoutOwner.visibility = GONE
+                layoutPartning.visibility = VISIBLE
                 tvPartnerMessage.text = current.message
+
+                try {
+                    if(current.photo.toString() != "null"){
+
+                        val photoString = DatabaseFun.takePhoto(current.photo.toString())?.photo
+
+                        if(photoString.toString() != "null"){
+                            val photoBit = ImageConvert.getBitmap(photoString)
+                            ivMessagePhotoPartner.visibility = VISIBLE
+                            ivMessagePhotoPartner.load(photoBit)
+                        }
+                    }
+                    else{
+                        ivMessagePhotoPartner.visibility = GONE
+                    }
+                }catch (e: Exception){
+                    Log.d("Error Adapter", "Error No: 9387")
+                }
+
+
             }
         }
     }

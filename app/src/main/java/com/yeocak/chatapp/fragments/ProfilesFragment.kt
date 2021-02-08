@@ -51,7 +51,7 @@ class ProfilesFragment : Fragment() {
                 val newProf = Profile(
                         transferprofileUid!!,
                         data["name"].toString(),
-                        data["intro"].toString(),
+                        data["desc"].toString(),
                         data["facebook"].toString(),
                         data["youtube"].toString(),
                         data["twitter"].toString(),

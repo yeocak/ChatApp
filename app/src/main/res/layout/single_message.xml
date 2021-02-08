@@ -15,23 +15,46 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/tvPartnerMessage"
+        <LinearLayout
+            android:id="@+id/layoutPartning"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="6dp"
             android:layout_marginRight="10dp"
             android:background="@drawable/message_back_partner"
-            android:backgroundTintMode="add"
-            android:fontFamily="sans-serif-medium"
-            android:paddingLeft="10dp"
-            android:paddingTop="4dp"
-            android:paddingRight="10dp"
-            android:paddingBottom="4dp"
-            android:text="Error!"
-            android:textSize="16sp"
-            android:visibility="invisible" />
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/ivMessagePhotoPartner"
+                android:layout_width="wrap_content"
+                android:layout_height="300dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:scaleType="fitXY"
+                android:visibility="gone"
+                app:srcCompat="@drawable/backgroundland" />
+
+            <TextView
+                android:id="@+id/tvPartnerMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginRight="10dp"
+                android:backgroundTintMode="add"
+                android:fontFamily="sans-serif-medium"
+                android:paddingLeft="10dp"
+                android:paddingTop="4dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="4dp"
+                android:text="Error!"
+                android:textSize="16sp"
+                android:visibility="visible" />
+        </LinearLayout>
     </LinearLayout>
 
     <androidx.constraintlayout.widget.Guideline
@@ -57,8 +80,8 @@
         app:layout_constraintStart_toStartOf="@+id/guideline12"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/tvSelfMessage"
+        <LinearLayout
+            android:id="@+id/layoutOwner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
@@ -66,14 +89,38 @@
             android:layout_marginTop="6dp"
             android:layout_marginRight="10dp"
             android:background="@drawable/message_back_owner"
-            android:backgroundTintMode="add"
-            android:fontFamily="sans-serif-medium"
-            android:paddingLeft="10dp"
-            android:paddingTop="4dp"
-            android:paddingRight="10dp"
-            android:paddingBottom="4dp"
-            android:text="Error!"
-            android:textSize="16sp"
-            android:visibility="invisible" />
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/ivMessagePhotoOwner"
+                android:layout_width="wrap_content"
+                android:layout_height="300dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:scaleType="centerCrop"
+                android:visibility="gone"
+                app:srcCompat="@drawable/logo" />
+
+            <TextView
+                android:id="@+id/tvSelfMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginRight="10dp"
+                android:backgroundTintMode="add"
+                android:fontFamily="sans-serif-medium"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="4dp"
+                android:text="Error!"
+                android:textSize="16sp"
+                android:visibility="visible" />
+        </LinearLayout>
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

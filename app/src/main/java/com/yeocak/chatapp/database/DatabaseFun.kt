@@ -25,8 +25,8 @@ object DatabaseFun {
                 "'${message.message}','${message.photo}','${message.date}','${message.isOwner}')")
     }
 
-    fun takeMessage(fromID: String): MutableList<Message>{
-        val cursor = databasing.rawQuery("SELECT * FROM messages WHERE fromid == '$fromID' ORDER BY date DESC LIMIT 20", null)
+    fun takeMessage(fromID: String, limit: Int): MutableList<Message>{
+        val cursor = databasing.rawQuery("SELECT * FROM messages WHERE fromid == '$fromID' ORDER BY date DESC LIMIT $limit", null)
 
         val returnList = mutableListOf<Message>()
 

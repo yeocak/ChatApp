@@ -1,10 +1,16 @@
 package com.yeocak.chatapp.activities
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
+import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.scale
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.google.firebase.auth.FirebaseUser
@@ -13,11 +19,12 @@ import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import com.yeocak.chatapp.*
 import com.yeocak.chatapp.LoginData.userUID
 import com.yeocak.chatapp.database.DatabaseFun
-import com.yeocak.chatapp.database.DatabaseFun.getProfile
 import com.yeocak.chatapp.database.Message
+import com.yeocak.chatapp.database.Photo
 import com.yeocak.chatapp.database.Profile
 import com.yeocak.chatapp.databinding.ActivityMessageBinding
 import com.yeocak.chatapp.notification.NotificationData
@@ -25,8 +32,6 @@ import com.yeocak.chatapp.notification.PushNotification
 import com.yeocak.chatapp.notification.RetrofitObject
 import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 
@@ -39,11 +44,13 @@ class MessageActivity : AppCompatActivity() {
 
     private var partnerProfile: Profile? = null
 
-    private lateinit var partnerPhone : String
-
     private lateinit var partnerUid: String
 
     private lateinit var rtdb : DatabaseReference
+
+    private var sendImageUri: Uri? = null
+
+    private var messageLimit = 20
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,14 +107,18 @@ class MessageActivity : AppCompatActivity() {
                                 child("photo").removeValue()
                             }
                         }
+
+                        if (a.child("photo").value.toString() != "null") {
+                            downloadImage(a.child("photo").value.toString())
+                        }
                     }
                 }
 
-                updateRV(DatabaseFun.takeMessage(partnerUid))
+                updateRV(DatabaseFun.takeMessage(partnerUid, messageLimit))
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(this@MessageActivity,"Failed to load new messages!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MessageActivity, "Failed to load new messages!", Toast.LENGTH_SHORT).show()
             }
         })
 
@@ -118,8 +129,8 @@ class MessageActivity : AppCompatActivity() {
                 val blockList = mutableSetOf<String>()
                 val fdb = FirebaseFirestore.getInstance()
 
-                fdb.collection("block").document(LoginData.userUID!!).collection("from").get().addOnSuccessListener { from ->
-                    fdb.collection("block").document(LoginData.userUID!!).collection("to").get().addOnSuccessListener { to ->
+                fdb.collection("block").document(userUID!!).collection("from").get().addOnSuccessListener { from ->
+                    fdb.collection("block").document(userUID!!).collection("to").get().addOnSuccessListener { to ->
                         for(a in from){
                             if(a["is"] == true){
                                 blockList.add(a.id)
@@ -136,16 +147,24 @@ class MessageActivity : AppCompatActivity() {
 
                             val uniqNumb = UUID.randomUUID()
 
-                            sendMessage(Message(
+                            val newMes = Message(
                                     uniqNumb.toString(),
                                     partnerUid,
                                     messageText,
                                     null,
                                     currentDate,
                                     true
-                            ))
+                            )
 
-                            binding.etNewMessage.setText("")
+                            if(sendImageUri != null){
+                                binding.pbLoadingPhoto.visibility = VISIBLE
+                                binding.etNewMessage.isEnabled = false
+                                binding.btnSendMessage.isEnabled = false
+                                loadPhoto(newMes)
+                            }
+                            else{
+                                sendMessage(newMes)
+                            }
                         }
                         else{
                             Toast.makeText(this, "You can't Message to this user anymore!", Toast.LENGTH_SHORT).show()
@@ -160,15 +179,69 @@ class MessageActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        binding.rvMessaging.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+        binding.rvMessaging.addOnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
             if (bottom < oldBottom) {
                 binding.rvMessaging.smoothScrollToPosition(adapting.itemCount)
             }
         }
+
+        binding.btnAddPhotoMessage.setOnClickListener {
+
+            val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+            startActivityForResult(gallery, 101)
+
+        }
+
+        binding.btnCancelPhoto.setOnClickListener {
+            binding.layoutLoadingPhoto.visibility = GONE
+            sendImageUri = null
+        }
+
+        binding.layoutRefresh.setOnRefreshListener {
+            messageLimit += 20
+            updateRV(DatabaseFun.takeMessage(partnerUid, messageLimit), false)
+            binding.layoutRefresh.isRefreshing = false
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK && requestCode == 101) {
+            sendImageUri = data?.data
+
+            if(sendImageUri != null){
+                binding.layoutLoadingPhoto.visibility = VISIBLE
+                binding.ivLoadingPhoto.load(sendImageUri)
+            }
+        }
+    }
+
+    private fun loadPhoto(data: Message){
+            val ref = Firebase.storage.reference.child("message_photos/${data.uniq}.jpg")
+
+            ref.putFile(sendImageUri!!).addOnSuccessListener {
+                ref.downloadUrl.addOnSuccessListener { Uring ->
+
+                    sendMessage(
+                            Message(
+                                    data.uniq,
+                                    data.fromId,
+                                    data.message,
+                                    Uring.toString(),
+                                    data.date,
+                                    data.isOwner
+                            )
+                    )
+                }
+            }.addOnCompleteListener {
+                binding.pbLoadingPhoto.visibility = GONE
+                binding.etNewMessage.isEnabled = true
+                binding.btnSendMessage.isEnabled = true
+            }
     }
 
     private fun setRV(){
-        messageList = DatabaseFun.takeMessage(partnerUid)
+        messageList = DatabaseFun.takeMessage(partnerUid, messageLimit)
 
         adapting = MessagingAdapter(messageList)
 
@@ -193,9 +266,9 @@ class MessageActivity : AppCompatActivity() {
     }
 
     private fun sendMessage(datas: Message){
+
         val partnerInbox = Firebase.database("https://chatapp-35faa-default-rtdb.europe-west1.firebasedatabase.app/").getReference("person_message")
                 .child(partnerUid).child(userUID!!)
-
         val lastPartner = Firebase.database("https://chatapp-35faa-default-rtdb.europe-west1.firebasedatabase.app/").getReference("last_message")
                 .child(partnerUid).child(userUID!!)
         val lastUser = Firebase.database("https://chatapp-35faa-default-rtdb.europe-west1.firebasedatabase.app/").getReference("last_message")
@@ -216,8 +289,31 @@ class MessageActivity : AppCompatActivity() {
                 lastUser.child("message").setValue(datas.message)
                 lastUser.child("date").setValue(datas.date)
 
+                binding.etNewMessage.setText("")
+                binding.layoutLoadingPhoto.visibility = GONE
+
                 DatabaseFun.addMessage(datas)
-                updateRV(DatabaseFun.takeMessage(partnerUid))
+
+                if(datas.photo.toString() != "null"){
+                    MainScope().launch {
+
+                        val bitmapTo = MediaStore.Images.Media.getBitmap(contentResolver, sendImageUri).scale(1000,1000,false)
+
+                        val stringTo = ImageConvert.getImageString(bitmapTo)
+                        if(stringTo != null){
+                            DatabaseFun.addPhoto(
+                                    Photo(
+                                            datas.photo.toString(),
+                                            stringTo
+                                    )
+                            )
+                            updateRV(DatabaseFun.takeMessage(partnerUid, messageLimit))
+                            sendImageUri = null
+                        }
+                    }
+                }
+
+                updateRV(DatabaseFun.takeMessage(partnerUid, messageLimit))
             }
         }
 
@@ -232,17 +328,39 @@ class MessageActivity : AppCompatActivity() {
 
     }
 
-    private fun updateRV(list: MutableList<Message>){
+    private fun updateRV(list: MutableList<Message>, scroll: Boolean = true){
         messageList.clear()
         messageList.addAll(list)
 
         adapting.notifyDataSetChanged()
-        binding.rvMessaging.scrollToPosition(messageList.size - 1)
+        if(scroll){
+            binding.rvMessaging.scrollToPosition(messageList.size - 1)
+        }
+        else{
+            binding.rvMessaging.scrollToPosition(25)
+        }
+
     }
 
+    private fun downloadImage(imageUrl: String){
+        MainScope().launch {
+            val bitmapTo = ImageConvert.downloadImageBitmap(imageUrl, this@MessageActivity, 1000, 1000)
+            val stringTo = ImageConvert.getImageString(bitmapTo)
+            if(stringTo != null){
+                DatabaseFun.addPhoto(
+                        Photo(
+                                imageUrl,
+                                stringTo
+                        )
+                )
+                updateRV(DatabaseFun.takeMessage(partnerUid, messageLimit))
+            }
+        }
+    }
 
     override fun onStop() {
         super.onStop()
         LoginData.inMessages = false
     }
+
 }

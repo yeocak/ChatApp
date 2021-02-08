@@ -6,10 +6,8 @@ import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.util.Base64
 import android.util.Log
-import coil.ImageLoader
 import coil.imageLoader
 import coil.request.ImageRequest
-import coil.request.SuccessResult
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import java.io.ByteArrayOutputStream
 import java.lang.Exception
@@ -18,7 +16,7 @@ object ImageConvert {
 
     fun getImageString(image: Bitmap?) : String?{
         val baos = ByteArrayOutputStream()
-        image?.compress(Bitmap.CompressFormat.PNG, 100, baos)
+        image?.compress(Bitmap.CompressFormat.PNG, 0, baos)
         val b = baos.toByteArray()
         return Base64.encodeToString(b, Base64.DEFAULT)
     }
@@ -28,7 +26,7 @@ object ImageConvert {
         return BitmapFactory.decodeByteArray(decodedByteArray, 0, decodedByteArray.size)
     }
 
-    suspend fun downloadImageBitmap(imageURL: String, context: Context): Bitmap? {
+    suspend fun downloadImageBitmap(imageURL: String, context: Context, width: Int = 100, heigth: Int = 100): Bitmap? {
 
         var bitmapNow: Bitmap? = null
 
@@ -46,8 +44,8 @@ object ImageConvert {
             if(bitmapNow != null){
                 return Bitmap.createScaledBitmap(
                         bitmapNow!!,
-                        100,
-                        100,
+                        width,
+                        heigth,
                         false
                 )
             }
@@ -58,8 +56,6 @@ object ImageConvert {
         }
 
         return bitmapNow
-
-
     }
 
 }

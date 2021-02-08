@@ -44,6 +44,8 @@ class SelfProfileFragment : Fragment() {
     private lateinit var profileInfo : MutableMap<String, String>
     private var changeList = mutableMapOf<Int,Boolean>()
 
+    private var version = 500
+
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
@@ -52,6 +54,8 @@ class SelfProfileFragment : Fragment() {
 
         db = FirebaseFirestore.getInstance()
         auth = Firebase.auth.currentUser!!
+
+        takeVersion()
 
         profileInfo = DatabaseFun.takeSelfProfile()
         if(profileInfo["name"].isNullOrEmpty()){
@@ -316,8 +320,13 @@ class SelfProfileFragment : Fragment() {
         val addingMap = hashMapOf<String, Any>()
         val easyMap = hashMapOf<String, Any>()
 
+        addingMap["version"] = version
+
         addingMap["name"] = name
         easyMap["name"] = name
+
+        easyMap["photo"] = auth.photoUrl.toString()
+        addingMap["photo"] = auth.photoUrl.toString()
 
         addingMap["desc"] = intro.toString()
 
@@ -425,9 +434,11 @@ class SelfProfileFragment : Fragment() {
                     addingMap["photo"] = Uring.toString()
                     easyMap["photo"] = Uring.toString()
 
+                    addingMap["version"] = version
+
                     db.collection("detailedprofile").document(userUID!!).update(addingMap).addOnSuccessListener {
                         db.collection("profile").document(userUID!!).update(easyMap).addOnSuccessListener {
-
+                            takeVersion()
                         }
                     }
                 }
@@ -436,6 +447,12 @@ class SelfProfileFragment : Fragment() {
         }.addOnCompleteListener {
             binding.ibSelfProfileAvatar.load(imageUri)
             binding.pbAvatar.visibility = GONE
+        }
+    }
+
+    private fun takeVersion(){
+        db.collection("detailedprofile").document(userUID!!).get().addOnSuccessListener {detailed ->
+                version = detailed.data?.get("version")!!.toString().toInt()+1
         }
     }
 

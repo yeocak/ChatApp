@@ -40,7 +40,6 @@ class CommunityFragment : Fragment() {
         Fdb = FirebaseFirestore.getInstance()
 
         transferingFM = this.fragmentManager
-        transferingActivity = (activity as MenuActivity)
 
         communityList = mutableListOf()
         blockList = mutableSetOf()
@@ -61,7 +60,6 @@ class CommunityFragment : Fragment() {
                                     blockList.add(a.id)
                                 }
                             }
-                            Log.d("Heyo",blockList.toString())
                             for (document in allUsers) {
                                 if(document.id != userUID!! && !blockList.contains(document.id)){
                                     val new = SingleCommunity(document.data["name"].toString(), document.id,document.data["photo"].toString())
@@ -139,12 +137,13 @@ class CommunityFragment : Fragment() {
         val row = (transferinWidth!! / 120).toInt()
 
         binding.rvCommunity.adapter = adapting
-        binding.rvCommunity.layoutManager = GridLayoutManager(transferingActivity,row)
+        activity.let {
+            binding.rvCommunity.layoutManager = GridLayoutManager(it,row)
+        }
     }
 
     companion object{
         var transferingFM : FragmentManager? = null
-        var transferingActivity : Context? = null
         var transferinWidth : Float? = null
     }
 }
