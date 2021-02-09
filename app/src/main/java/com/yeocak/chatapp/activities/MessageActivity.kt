@@ -1,11 +1,12 @@
 package com.yeocak.chatapp.activities
 
+import android.R.attr.bitmap
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.Toast
@@ -31,6 +32,7 @@ import com.yeocak.chatapp.notification.NotificationData
 import com.yeocak.chatapp.notification.PushNotification
 import com.yeocak.chatapp.notification.RetrofitObject
 import kotlinx.coroutines.*
+import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -217,9 +219,14 @@ class MessageActivity : AppCompatActivity() {
     }
 
     private fun loadPhoto(data: Message){
-            val ref = Firebase.storage.reference.child("message_photos/${data.uniq}.jpg")
+        val ref = Firebase.storage.reference.child("message_photos/${data.uniq}.jpg")
 
-            ref.putFile(sendImageUri!!).addOnSuccessListener {
+        val bitmapTo = MediaStore.Images.Media.getBitmap(contentResolver, sendImageUri).scale(1000, 1000, false)
+        val baos = ByteArrayOutputStream()
+        bitmapTo.compress(Bitmap.CompressFormat.PNG, 100, baos)
+        val byted: ByteArray = baos.toByteArray()
+
+            ref.putBytes(byted).addOnSuccessListener {
                 ref.downloadUrl.addOnSuccessListener { Uring ->
 
                     sendMessage(
@@ -297,7 +304,7 @@ class MessageActivity : AppCompatActivity() {
                 if(datas.photo.toString() != "null"){
                     MainScope().launch {
 
-                        val bitmapTo = MediaStore.Images.Media.getBitmap(contentResolver, sendImageUri).scale(1000,1000,false)
+                        val bitmapTo = MediaStore.Images.Media.getBitmap(contentResolver, sendImageUri).scale(1000, 1000, false)
 
                         val stringTo = ImageConvert.getImageString(bitmapTo)
                         if(stringTo != null){

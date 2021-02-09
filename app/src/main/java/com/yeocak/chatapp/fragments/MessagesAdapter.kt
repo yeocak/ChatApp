@@ -106,6 +106,9 @@ class MessagesAdapter(
                             binding.ivPersonPhoto.load(photo)
                         }
                     }
+                    else{
+                        binding.ivPersonPhoto.load(R.drawable.ic_baseline_person_24)
+                    }
                 }
             }
 
