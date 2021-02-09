@@ -344,7 +344,7 @@ class MessageActivity : AppCompatActivity() {
             binding.rvMessaging.scrollToPosition(messageList.size - 1)
         }
         else{
-            binding.rvMessaging.scrollToPosition(25)
+            binding.rvMessaging.scrollToPosition(22)
         }
 
     }

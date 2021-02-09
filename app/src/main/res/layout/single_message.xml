@@ -90,7 +90,7 @@
             android:layout_marginRight="10dp"
             android:background="@drawable/message_back_owner"
             android:orientation="vertical"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/ivMessagePhotoOwner"
@@ -101,7 +101,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="10dp"
                 android:scaleType="centerCrop"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:srcCompat="@drawable/logo" />
 
             <TextView

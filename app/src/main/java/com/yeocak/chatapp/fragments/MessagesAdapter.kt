@@ -55,6 +55,8 @@ class MessagesAdapter(
             GlobalScope.launch {
                 val result = current.uid.getProfile(context)
 
+                Log.d("Testing1", "1 $result")
+
                 if(result == "download"){
                     fsdb.get().addOnSuccessListener { data ->
                         val newProf = Profile(
@@ -73,6 +75,8 @@ class MessagesAdapter(
                         MainScope().launch {
                             val bitmap = ImageConvert.downloadImageBitmap(data["photo"].toString(),context)
                             val string = ImageConvert.getImageString(bitmap)
+
+                            Log.d("Testing1", "1 $string")
 
                             if(string != null){
                                 DatabaseFun.addPhoto(Photo(
@@ -105,9 +109,9 @@ class MessagesAdapter(
                             val photo = ImageConvert.getBitmap(takePhoto.photo)
                             binding.ivPersonPhoto.load(photo)
                         }
-                    }
-                    else{
-                        binding.ivPersonPhoto.load(R.drawable.ic_baseline_person_24)
+                        else{
+                            binding.ivPersonPhoto.load(R.drawable.ic_baseline_person_24)
+                        }
                     }
                 }
             }

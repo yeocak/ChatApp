@@ -104,8 +104,6 @@
 
                     android:text=" \n -Firebase (Auth, Analytics, Firestore, Storage, FCM, Realtime Database)\n
 -Coil\n
--Kotlin Coroutines\n
--Facebook Android SDK\n\n
 -View Binding\n
 -SQLite"
                     android:textSize="17sp" />
