@@ -1,48 +1,15 @@
-# A chat app that work with Firebase
+# A simple chat app with community system
 
-### !!!!Still working on!!!!
+### This is a practice app. In this app, i tried to use most of firebase components. In app, you can message or block someone someone. You can look anyone's (not blocked) profile. Or you can edit your profile, profile photo.
 
-![](https://raw.githubusercontent.com/yeocak/ChatApp/master/github_images/login.png)
+#### You can create a custom account or sign in with google, github accounts. 
 
-![](https://raw.githubusercontent.com/yeocak/ChatApp/master/github_images/login_land.png)
+![](https://github.com/yeocak/ChatApp/blob/master/github_images/WelcomeActivities.png)
 
-TODO List:
-  - ~~Login screen~~
-    - ~~Email and Password Login~~
-    - ~~Facebook Login~~
-    - ~~Google Login~~
-    
-  - ~~Register screen~~
-  
-  - ~~Reset password with Email screen~~
-  
-  - ~~Messaging system~~
-    - ~~Realtime message system~~
-    - ~~Notification system (Debug in-app notification)~~
-    
-  - ~~Messages screen~~
-  
-  - ~~Community screen~~
-    - ~~Show all users~~
-    - ~~User search bar~~
-    
-  - ~~Profile screen (Edit design)~~
-    - ~~Self profile screen~~
-    - ~~Others profile screen~~
-    
-  - ~~Settings screen~~
-    - ~~Block user system~~
-    - Delete account system(Maybe later)
-    - ~~On or off notifications~~
-    
-  - ~~Last messages screen~~
+![](https://github.com/yeocak/ChatApp/blob/master/github_images/MessageActivities.png)
 
--------------------------
+![](https://github.com/yeocak/ChatApp/blob/master/github_images/CommunityFragments.png)
 
-  - ~~Chat tab with keyboard slide~~
-  - ~~App icon~~
-  - Google login bug fix (?)
-  - ~~Github Login~~
-  - Message groups
-  - Photo and voice records
-  - Resize photos
+#### You can customize your preferences from settings tab.
+
+![](https://github.com/yeocak/ChatApp/blob/master/github_images/SettingsFragment.png)
