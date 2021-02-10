@@ -17,6 +17,7 @@ import com.yeocak.chatapp.LoginData.userUID
 import com.yeocak.chatapp.R
 import com.yeocak.chatapp.activities.LoginActivity
 import com.yeocak.chatapp.activities.MenuActivity
+import com.yeocak.chatapp.activities.WelcomeActivity
 import com.yeocak.chatapp.databinding.FragmentSettingsBinding
 
 class SettingsFragment : Fragment() {
@@ -48,7 +49,7 @@ class SettingsFragment : Fragment() {
         binding.btnSignOut.setOnClickListener {
             Firebase.auth.signOut()
 
-            val intent = Intent((activity as MenuActivity),LoginActivity::class.java)
+            val intent = Intent((activity as MenuActivity),WelcomeActivity::class.java)
             startActivity(intent)
             (activity as MenuActivity).finishAffinity()
         }
