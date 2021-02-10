@@ -13,3 +13,6 @@
 #### You can customize your preferences from settings tab.
 
 ![](https://github.com/yeocak/ChatApp/blob/master/github_images/SettingsFragment.png)
+
+### If you want to try the app on your phone, you can download the APK: 
+  https://github.com/yeocak/ChatApp/blob/master/app/release/app-release.apk
