@@ -1,6 +1,7 @@
 package com.yeocak.chatapp.fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -49,11 +50,13 @@ class MessagesFragment : Fragment() {
         rtdb.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                     for(i in dataSnapshot.children){
-                        DatabaseFun.addLast(LastMessage(
+                        val newLast = LastMessage(
                                 i.key!!,
                                 i.child("message").value.toString(),
                                 i.child("date").value.toString()
-                        ))
+                                    )
+
+                        DatabaseFun.addLast(newLast)
                     }
 
                 updateRV(DatabaseFun.takeLasts())
