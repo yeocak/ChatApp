@@ -25,6 +25,9 @@ import com.yeocak.chatapp.database.Message
 import com.yeocak.chatapp.databinding.FragmentMessagesBinding
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.Main
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class MessagesFragment : Fragment() {
 
@@ -63,7 +66,7 @@ class MessagesFragment : Fragment() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Toast.makeText((activity as MenuActivity),"Failed to load new messages!", Toast.LENGTH_SHORT).show()
+                Log.d("CustomError", "15342")
             }
         })
 
@@ -74,7 +77,9 @@ class MessagesFragment : Fragment() {
     private fun updateRV(list: MutableList<LastMessage>){
         messages.clear()
         messages.addAll(list)
-        messages.sortByDescending { it.date }
+        messages.sortByDescending {
+            SimpleDateFormat("dd/M/yyyy hh:mm:ss").parse(it.date)
+        }
 
         adapting.notifyDataSetChanged()
     }

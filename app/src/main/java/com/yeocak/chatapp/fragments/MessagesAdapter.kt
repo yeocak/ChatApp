@@ -12,7 +12,6 @@ import coil.load
 import com.google.firebase.firestore.FirebaseFirestore
 import com.yeocak.chatapp.ImageConvert
 import com.yeocak.chatapp.R
-import com.yeocak.chatapp.SingleMessages
 import com.yeocak.chatapp.activities.MessageActivity
 import com.yeocak.chatapp.database.DatabaseFun
 import com.yeocak.chatapp.database.DatabaseFun.getProfile

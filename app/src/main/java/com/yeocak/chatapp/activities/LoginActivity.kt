@@ -177,6 +177,7 @@ class LoginActivity : AppCompatActivity() {
 
         db.firestoreSettings = settings
 
+
         db.collection("detailedprofile").document(auth.currentUser!!.uid).get().addOnSuccessListener {
 
             if(it["name"].toString() == "null"){
@@ -211,6 +212,8 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
             else{
+                db.collection("profile").document(userUID!!).update(mapOf("currentPhone" to phoneToken!!))
+
                 val intent = Intent(this, WelcomeActivity::class.java)
                 startActivity(intent)
                 binding.pbLogin.visibility = GONE

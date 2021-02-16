@@ -120,7 +120,7 @@ class MessageActivity : AppCompatActivity() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(this@MessageActivity, "Failed to load new messages!", Toast.LENGTH_SHORT).show()
+                Log.d("CustomError", "35764")
             }
         })
 
@@ -325,10 +325,11 @@ class MessageActivity : AppCompatActivity() {
         }
 
         FirebaseFirestore.getInstance().collection("profile").document(partnerUid).get().addOnSuccessListener {
+            Log.d("MessagingNot",NotificationData(auth.displayName!!, datas.message, auth.photoUrl.toString(), userUID!!).toString() + it["currentPhone"].toString())
             sendNotification(
                     PushNotification(
                             NotificationData(auth.displayName!!, datas.message, auth.photoUrl.toString(), userUID!!),
-                            it["phone"].toString()
+                            it["currentPhone"].toString()
                     )
             )
         }
@@ -338,6 +339,9 @@ class MessageActivity : AppCompatActivity() {
     private fun updateRV(list: MutableList<Message>, scroll: Boolean = true){
         messageList.clear()
         messageList.addAll(list)
+        messageList.sortBy {
+                SimpleDateFormat("dd/M/yyyy hh:mm:ss").parse(it.date)
+        }
 
         adapting.notifyDataSetChanged()
         if(scroll){
