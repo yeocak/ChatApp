@@ -66,7 +66,7 @@ class MessagesFragment : Fragment() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.d("CustomError", "15342")
+                Log.d("CustomError", "15342 ")
             }
         })
 

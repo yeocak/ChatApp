@@ -11,6 +11,7 @@ import com.yeocak.chatapp.databinding.ActivityMenuBinding
 import com.yeocak.chatapp.fragments.CommunityFragment
 import com.yeocak.chatapp.fragments.CommunityFragment.Companion.transferinWidth
 import com.yeocak.chatapp.fragments.MessagesFragment
+import com.yeocak.chatapp.fragments.ProfilesFragment
 import com.yeocak.chatapp.fragments.SelfProfileFragment
 import com.yeocak.chatapp.fragments.settings.SettingsFragment
 
@@ -23,20 +24,27 @@ class MenuActivity : AppCompatActivity() {
         binding = ActivityMenuBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        menuActivity = this
+        when(intent.getStringExtra("fragment")){
+            "profiles" -> {
+                supportFragmentManager.beginTransaction().replace(R.id.frMain, ProfilesFragment()).commit()
+            }
+            else -> {
+                menuActivity = this
 
-        DatabaseFun.creating(this, userUID!!)
-        DatabaseFun.setupSelfProfile()
-        DatabaseFun.setupMessage()
-        DatabaseFun.setupProfile()
-        DatabaseFun.setupLast()
-        DatabaseFun.setupPhoto()
+                DatabaseFun.creating(this, userUID!!)
+                DatabaseFun.setupSelfProfile()
+                DatabaseFun.setupMessage()
+                DatabaseFun.setupProfile()
+                DatabaseFun.setupLast()
+                DatabaseFun.setupPhoto()
 
-        val displayMetrics = DisplayMetrics()
-        windowManager?.defaultDisplay!!.getRealMetrics(displayMetrics)
-        transferinWidth = displayMetrics.xdpi
+                val displayMetrics = DisplayMetrics()
+                windowManager?.defaultDisplay!!.getRealMetrics(displayMetrics)
+                transferinWidth = displayMetrics.xdpi
 
-        supportFragmentManager.beginTransaction().replace(R.id.frMain, MessagesFragment()).commit()
+                supportFragmentManager.beginTransaction().replace(R.id.frMain, MessagesFragment()).commit()
+            }
+        }
 
         binding.bottomNavigation.setOnNavigationItemSelectedListener {
 

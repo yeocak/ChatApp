@@ -23,11 +23,14 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.yeocak.chatapp.*
 import com.yeocak.chatapp.LoginData.userUID
+import com.yeocak.chatapp.R
 import com.yeocak.chatapp.database.DatabaseFun
 import com.yeocak.chatapp.database.Message
 import com.yeocak.chatapp.database.Photo
 import com.yeocak.chatapp.database.Profile
 import com.yeocak.chatapp.databinding.ActivityMessageBinding
+import com.yeocak.chatapp.fragments.CommunityAdapter
+import com.yeocak.chatapp.fragments.ProfilesFragment
 import com.yeocak.chatapp.notification.NotificationData
 import com.yeocak.chatapp.notification.PushNotification
 import com.yeocak.chatapp.notification.RetrofitObject
@@ -203,6 +206,14 @@ class MessageActivity : AppCompatActivity() {
             messageLimit += 20
             updateRV(DatabaseFun.takeMessage(partnerUid, messageLimit), false)
             binding.layoutRefresh.isRefreshing = false
+        }
+
+        binding.tvPartnerName.setOnClickListener {
+            val action = Intent(this, MenuActivity::class.java)
+            action.putExtra("fragment","profiles")
+            CommunityAdapter.transferprofileUid = partnerUid
+            startActivity(action)
+            finishAffinity()
         }
     }
 
