@@ -1,4 +1,4 @@
-package com.yeocak.chatapp.activities
+package com.yeocak.chatapp.ui.welcome
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity

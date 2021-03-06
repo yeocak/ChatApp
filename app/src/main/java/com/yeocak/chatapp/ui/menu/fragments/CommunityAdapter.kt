@@ -1,4 +1,4 @@
-package com.yeocak.chatapp.fragments
+package com.yeocak.chatapp.ui.menu.fragments
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,9 +6,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.google.firebase.firestore.FirebaseFirestore
 import com.yeocak.chatapp.R
-import com.yeocak.chatapp.SingleCommunity
+import com.yeocak.chatapp.model.SingleCommunity
 import com.yeocak.chatapp.databinding.SingleCommunityBlockBinding
 
 class CommunityAdapter(

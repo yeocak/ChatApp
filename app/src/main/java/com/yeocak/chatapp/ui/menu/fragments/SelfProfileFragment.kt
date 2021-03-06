@@ -1,4 +1,4 @@
-package com.yeocak.chatapp.fragments
+package com.yeocak.chatapp.ui.menu.fragments
 
 import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
@@ -23,11 +23,11 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.yeocak.chatapp.database.DatabaseFun
-import com.yeocak.chatapp.ImageConvert
-import com.yeocak.chatapp.LoginData.userUID
+import com.yeocak.chatapp.utils.ImageConvert
+import com.yeocak.chatapp.utils.LoginData.userUID
 import com.yeocak.chatapp.R
-import com.yeocak.chatapp.activities.MenuActivity
-import com.yeocak.chatapp.activities.MenuActivity.Companion.menuActivity
+import com.yeocak.chatapp.ui.menu.MenuActivity
+import com.yeocak.chatapp.ui.menu.MenuActivity.Companion.menuActivity
 import com.yeocak.chatapp.databinding.FragmentSelfProfileBinding
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.Main
@@ -216,7 +216,7 @@ class SelfProfileFragment : Fragment() {
     }
 
     private fun refreshFragment(){
-        val fm = fragmentManager!!.beginTransaction().replace(R.id.frMain,SelfProfileFragment())
+        val fm = fragmentManager!!.beginTransaction().replace(R.id.frMain, SelfProfileFragment())
         fm.commit()
     }
 

@@ -1,4 +1,4 @@
-package com.yeocak.chatapp.activities
+package com.yeocak.chatapp.ui.welcome
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -18,7 +18,7 @@ class ForgotActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.btnGoBack.setOnClickListener {
-            val intent = Intent(this,LoginActivity::class.java)
+            val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finishAffinity()
         }

@@ -4,8 +4,12 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
-import com.yeocak.chatapp.ImageConvert
-import com.yeocak.chatapp.LoginData.userUID
+import com.yeocak.chatapp.utils.ImageConvert
+import com.yeocak.chatapp.utils.LoginData.userUID
+import com.yeocak.chatapp.model.LastMessage
+import com.yeocak.chatapp.model.Message
+import com.yeocak.chatapp.model.Photo
+import com.yeocak.chatapp.model.Profile
 import kotlinx.coroutines.*
 
 object DatabaseFun {

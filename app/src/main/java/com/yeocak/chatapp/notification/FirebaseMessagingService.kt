@@ -1,4 +1,4 @@
-package com.yeocak.chatapp
+package com.yeocak.chatapp.notification
 
 import android.app.*
 import android.app.NotificationManager.IMPORTANCE_HIGH
@@ -17,8 +17,9 @@ import coil.imageLoader
 import coil.request.ImageRequest
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.yeocak.chatapp.activities.LoginActivity
-import com.yeocak.chatapp.activities.WelcomeActivity
+import com.yeocak.chatapp.utils.LoginData
+import com.yeocak.chatapp.R
+import com.yeocak.chatapp.ui.welcome.WelcomeActivity
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
@@ -52,7 +53,7 @@ class FirebaseMessagingService: FirebaseMessagingService() {
                     photoPers = loadImage(message.data["photo"]!!)
                 }
                 else{
-                    photoPers = ContextCompat.getDrawable(this@FirebaseMessagingService,R.drawable.ic_baseline_groups_24)?.toBitmap()
+                    photoPers = ContextCompat.getDrawable(this@FirebaseMessagingService, R.drawable.ic_baseline_groups_24)?.toBitmap()
                 }
 
                 withContext(Main){

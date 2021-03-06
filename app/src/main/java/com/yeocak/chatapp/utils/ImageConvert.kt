@@ -1,4 +1,4 @@
-package com.yeocak.chatapp
+package com.yeocak.chatapp.utils
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -11,6 +11,8 @@ import coil.request.ImageRequest
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import java.io.ByteArrayOutputStream
 import java.lang.Exception
+
+
 
 object ImageConvert {
 

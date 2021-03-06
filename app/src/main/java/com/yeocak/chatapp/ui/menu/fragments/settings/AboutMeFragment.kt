@@ -1,4 +1,4 @@
-package com.yeocak.chatapp.fragments.settings
+package com.yeocak.chatapp.ui.menu.fragments.settings
 
 import android.content.Intent
 import android.net.Uri
@@ -7,8 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.yeocak.chatapp.LoginData
-import com.yeocak.chatapp.R
+import com.yeocak.chatapp.utils.LoginData
 import com.yeocak.chatapp.databinding.FragmentAboutMeBinding
 
 class AboutMeFragment : Fragment() {

@@ -1,9 +1,6 @@
-package com.yeocak.chatapp.fragments
+package com.yeocak.chatapp.ui.menu.fragments
 
-import android.content.Context
-import android.content.res.Configuration
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -13,15 +10,11 @@ import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.GridLayoutManager
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
-import com.yeocak.chatapp.*
-import com.yeocak.chatapp.LoginData.userUID
-import com.yeocak.chatapp.activities.MenuActivity
+import com.yeocak.chatapp.utils.LoginData.userUID
+import com.yeocak.chatapp.ui.menu.MenuActivity
 import com.yeocak.chatapp.databinding.FragmentCommunityBinding
+import com.yeocak.chatapp.model.SingleCommunity
 import kotlinx.coroutines.*
 import java.util.*
 

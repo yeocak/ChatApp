@@ -1,4 +1,4 @@
-package com.yeocak.chatapp.activities
+package com.yeocak.chatapp.ui.message
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -6,15 +6,12 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import android.widget.RelativeLayout
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.yeocak.chatapp.ImageConvert
-import com.yeocak.chatapp.LoginData.userUID
+import com.yeocak.chatapp.utils.ImageConvert
 import com.yeocak.chatapp.R
 import com.yeocak.chatapp.database.DatabaseFun
-import com.yeocak.chatapp.database.Message
+import com.yeocak.chatapp.model.Message
 import com.yeocak.chatapp.databinding.SingleMessageBinding
 
 class MessagingAdapter(

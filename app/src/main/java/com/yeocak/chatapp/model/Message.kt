@@ -1,4 +1,4 @@
-package com.yeocak.chatapp.database
+package com.yeocak.chatapp.model
 
 data class Message(
         val uniq: String,

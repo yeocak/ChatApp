@@ -1,12 +1,11 @@
-package com.yeocak.chatapp.fragments.settings
+package com.yeocak.chatapp.ui.menu.fragments.settings
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
-import com.yeocak.chatapp.LoginData
-import com.yeocak.chatapp.LoginData.userUID
+import com.yeocak.chatapp.utils.LoginData.userUID
 import com.yeocak.chatapp.R
 import com.yeocak.chatapp.databinding.SingleBlockedUserBlockBinding
 
@@ -19,7 +18,7 @@ class BlockedAdapter (
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BlockedViewHolder {
-        return BlockedAdapter.BlockedViewHolder(
+        return BlockedViewHolder(
             LayoutInflater.from(parent.context).inflate(
                 R.layout.single_blocked_user_block,
                 parent,

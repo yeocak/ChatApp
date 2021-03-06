@@ -1,8 +1,7 @@
-package com.yeocak.chatapp.fragments.settings
+package com.yeocak.chatapp.ui.menu.fragments.settings
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -13,11 +12,11 @@ import android.widget.Toast
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
-import com.yeocak.chatapp.LoginData.userUID
+import com.yeocak.chatapp.utils.LoginData.userUID
 import com.yeocak.chatapp.R
-import com.yeocak.chatapp.activities.LoginActivity
-import com.yeocak.chatapp.activities.MenuActivity
-import com.yeocak.chatapp.activities.WelcomeActivity
+import com.yeocak.chatapp.ui.welcome.LoginActivity
+import com.yeocak.chatapp.ui.menu.MenuActivity
+import com.yeocak.chatapp.ui.welcome.WelcomeActivity
 import com.yeocak.chatapp.databinding.FragmentSettingsBinding
 
 class SettingsFragment : Fragment() {
@@ -49,7 +48,7 @@ class SettingsFragment : Fragment() {
         binding.btnSignOut.setOnClickListener {
             Firebase.auth.signOut()
 
-            val intent = Intent((activity as MenuActivity),WelcomeActivity::class.java)
+            val intent = Intent((activity as MenuActivity), WelcomeActivity::class.java)
             startActivity(intent)
             (activity as MenuActivity).finishAffinity()
         }

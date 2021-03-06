@@ -1,8 +1,7 @@
-package com.yeocak.chatapp.fragments
+package com.yeocak.chatapp.ui.menu.fragments
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,14 +9,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.google.firebase.firestore.FirebaseFirestore
-import com.yeocak.chatapp.ImageConvert
+import com.yeocak.chatapp.utils.ImageConvert
 import com.yeocak.chatapp.R
-import com.yeocak.chatapp.activities.MessageActivity
+import com.yeocak.chatapp.ui.message.MessageActivity
 import com.yeocak.chatapp.database.DatabaseFun
 import com.yeocak.chatapp.database.DatabaseFun.getProfile
-import com.yeocak.chatapp.database.LastMessage
-import com.yeocak.chatapp.database.Photo
-import com.yeocak.chatapp.database.Profile
+import com.yeocak.chatapp.model.LastMessage
+import com.yeocak.chatapp.model.Photo
+import com.yeocak.chatapp.model.Profile
 import com.yeocak.chatapp.databinding.SingleMessagesMenuBinding
 import kotlinx.coroutines.*
 

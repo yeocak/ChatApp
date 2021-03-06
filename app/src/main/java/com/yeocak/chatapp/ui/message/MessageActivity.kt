@@ -1,6 +1,5 @@
-package com.yeocak.chatapp.activities
+package com.yeocak.chatapp.ui.message
 
-import android.R.attr.bitmap
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -22,18 +21,19 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.yeocak.chatapp.*
-import com.yeocak.chatapp.LoginData.userUID
-import com.yeocak.chatapp.R
+import com.yeocak.chatapp.utils.LoginData.userUID
 import com.yeocak.chatapp.database.DatabaseFun
-import com.yeocak.chatapp.database.Message
-import com.yeocak.chatapp.database.Photo
-import com.yeocak.chatapp.database.Profile
+import com.yeocak.chatapp.model.Message
+import com.yeocak.chatapp.model.Photo
+import com.yeocak.chatapp.model.Profile
 import com.yeocak.chatapp.databinding.ActivityMessageBinding
-import com.yeocak.chatapp.fragments.CommunityAdapter
-import com.yeocak.chatapp.fragments.ProfilesFragment
-import com.yeocak.chatapp.notification.NotificationData
-import com.yeocak.chatapp.notification.PushNotification
+import com.yeocak.chatapp.ui.menu.fragments.CommunityAdapter
+import com.yeocak.chatapp.model.NotificationData
+import com.yeocak.chatapp.model.PushNotification
 import com.yeocak.chatapp.notification.RetrofitObject
+import com.yeocak.chatapp.ui.menu.MenuActivity
+import com.yeocak.chatapp.utils.ImageConvert
+import com.yeocak.chatapp.utils.LoginData
 import kotlinx.coroutines.*
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
@@ -336,7 +336,7 @@ class MessageActivity : AppCompatActivity() {
         }
 
         FirebaseFirestore.getInstance().collection("profile").document(partnerUid).get().addOnSuccessListener {
-            Log.d("MessagingNot",NotificationData(auth.displayName!!, datas.message, auth.photoUrl.toString(), userUID!!).toString() + it["currentPhone"].toString())
+            Log.d("MessagingNot", NotificationData(auth.displayName!!, datas.message, auth.photoUrl.toString(), userUID!!).toString() + it["currentPhone"].toString())
             sendNotification(
                     PushNotification(
                             NotificationData(auth.displayName!!, datas.message, auth.photoUrl.toString(), userUID!!),

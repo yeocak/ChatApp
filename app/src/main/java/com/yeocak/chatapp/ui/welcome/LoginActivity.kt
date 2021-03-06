@@ -1,4 +1,4 @@
-package com.yeocak.chatapp.activities
+package com.yeocak.chatapp.ui.welcome
 
 import android.content.Intent
 import android.os.Bundle
@@ -23,8 +23,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.ktx.Firebase
-import com.yeocak.chatapp.LoginData.phoneToken
-import com.yeocak.chatapp.LoginData.userUID
+import com.yeocak.chatapp.utils.LoginData.phoneToken
+import com.yeocak.chatapp.utils.LoginData.userUID
 import com.yeocak.chatapp.R
 import com.yeocak.chatapp.databinding.ActivityLoginBinding
 

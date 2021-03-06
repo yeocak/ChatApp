@@ -1,4 +1,4 @@
-package com.yeocak.chatapp.fragments.settings
+package com.yeocak.chatapp.ui.menu.fragments.settings
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,8 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.firestore.FirebaseFirestore
-import com.yeocak.chatapp.LoginData.userUID
-import com.yeocak.chatapp.activities.MenuActivity
+import com.yeocak.chatapp.utils.LoginData.userUID
+import com.yeocak.chatapp.ui.menu.MenuActivity
 import com.yeocak.chatapp.databinding.FragmentBlockedBinding
 
 class BlockedFragment : Fragment() {

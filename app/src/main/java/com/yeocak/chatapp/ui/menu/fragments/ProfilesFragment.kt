@@ -1,4 +1,4 @@
-package com.yeocak.chatapp.fragments
+package com.yeocak.chatapp.ui.menu.fragments
 
 import android.app.AlertDialog
 import android.content.Intent
@@ -12,20 +12,18 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import coil.load
 import com.google.firebase.firestore.FirebaseFirestore
-import com.yeocak.chatapp.ImageConvert
-import com.yeocak.chatapp.LoginData.userUID
+import com.yeocak.chatapp.utils.ImageConvert
+import com.yeocak.chatapp.utils.LoginData.userUID
 import com.yeocak.chatapp.R
-import com.yeocak.chatapp.activities.MenuActivity
-import com.yeocak.chatapp.activities.MessageActivity
+import com.yeocak.chatapp.ui.menu.MenuActivity
+import com.yeocak.chatapp.ui.message.MessageActivity
 import com.yeocak.chatapp.database.DatabaseFun
-import com.yeocak.chatapp.database.DatabaseFun.getProfile
-import com.yeocak.chatapp.database.Photo
-import com.yeocak.chatapp.database.Profile
+import com.yeocak.chatapp.model.Photo
+import com.yeocak.chatapp.model.Profile
 import com.yeocak.chatapp.databinding.FragmentProfilesBinding
-import com.yeocak.chatapp.fragments.CommunityAdapter.Companion.transferprofileUid
+import com.yeocak.chatapp.ui.menu.fragments.CommunityAdapter.Companion.transferprofileUid
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class ProfilesFragment : Fragment() {

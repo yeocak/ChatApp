@@ -1,19 +1,19 @@
-package com.yeocak.chatapp.activities
+package com.yeocak.chatapp.ui.menu
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.DisplayMetrics
 import com.yeocak.chatapp.database.DatabaseFun
-import com.yeocak.chatapp.LoginData.userUID
+import com.yeocak.chatapp.utils.LoginData.userUID
 import com.yeocak.chatapp.R
 import com.yeocak.chatapp.databinding.ActivityMenuBinding
-import com.yeocak.chatapp.fragments.CommunityFragment
-import com.yeocak.chatapp.fragments.CommunityFragment.Companion.transferinWidth
-import com.yeocak.chatapp.fragments.MessagesFragment
-import com.yeocak.chatapp.fragments.ProfilesFragment
-import com.yeocak.chatapp.fragments.SelfProfileFragment
-import com.yeocak.chatapp.fragments.settings.SettingsFragment
+import com.yeocak.chatapp.ui.menu.fragments.CommunityFragment
+import com.yeocak.chatapp.ui.menu.fragments.CommunityFragment.Companion.transferinWidth
+import com.yeocak.chatapp.ui.menu.fragments.MessagesFragment
+import com.yeocak.chatapp.ui.menu.fragments.ProfilesFragment
+import com.yeocak.chatapp.ui.menu.fragments.SelfProfileFragment
+import com.yeocak.chatapp.ui.menu.fragments.settings.SettingsFragment
 
 class MenuActivity : AppCompatActivity() {
 

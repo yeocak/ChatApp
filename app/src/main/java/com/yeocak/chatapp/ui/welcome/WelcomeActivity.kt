@@ -1,4 +1,4 @@
-package com.yeocak.chatapp.activities
+package com.yeocak.chatapp.ui.welcome
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -6,7 +6,8 @@ import android.os.Bundle
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.ktx.Firebase
-import com.yeocak.chatapp.LoginData
+import com.yeocak.chatapp.utils.LoginData
+import com.yeocak.chatapp.ui.menu.MenuActivity
 import com.yeocak.chatapp.databinding.ActivityWelcomeBinding
 
 class WelcomeActivity : AppCompatActivity() {

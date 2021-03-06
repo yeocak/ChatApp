@@ -14,23 +14,23 @@
         android:roundIcon="@mipmap/ic_launcher_2_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.NoActionBar">
-        <activity android:name=".activities.WelcomeActivity" >
+        <activity android:name=".ui.welcome.WelcomeActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.MessageActivity"
+        <activity android:name=".ui.message.MessageActivity"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
-        <activity android:name=".activities.ForgotActivity" />
-        <activity android:name=".activities.MenuActivity" />
-        <activity android:name=".activities.RegisterActivity" />
-        <activity android:name=".activities.LoginActivity"/>
+        <activity android:name=".ui.welcome.ForgotActivity" />
+        <activity android:name=".ui.menu.MenuActivity" />
+        <activity android:name=".ui.welcome.RegisterActivity" />
+        <activity android:name=".ui.welcome.LoginActivity"/>
 
 
         <service
-            android:name=".FirebaseMessagingService"
+            android:name=".notification.FirebaseMessagingService"
             android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
